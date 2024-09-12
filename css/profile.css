@@ -1,0 +1,101 @@
+body {margin:0; background-color:lightgray;}
+
+
+/* Media query for responsiveness */
+@media screen and (max-width: 768px) {
+    .iconbar {
+        display: show; 
+    }
+}
+.icon-bar {
+    width: 100%;
+    background-color: darkgreen;
+    margin-top: 101px;
+    overflow: auto;
+    padding: 15px 0;
+    display: flex; 
+    justify-content: space-around;
+  }
+  
+  .icon-bar a {
+    width: 20%;
+    text-align: center;
+    transition: all 0.3s ease;
+    color: white;
+    font-size: 25px;
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none; 
+}
+
+.icon-bar a:hover {
+    color: #00ff99; 
+}
+
+.icon-bar a:hover::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120%;
+    height: 120%;
+    background: rgba(0, 255, 153, 0.3); 
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    box-shadow: 0 0 15px rgba(0, 255, 153, 0.6); 
+    transition: all 0.3s ease;
+}
+
+.icon-bar a:hover i {
+    transform: scale(1.1); 
+    transition: all 0.3s ease;
+}
+
+.icon-bar a span {
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.icon-bar a:hover span {
+    color: #00ff99; 
+}
+.iconbar {
+width: 100%;
+overflow: auto;
+}
+
+.iconbar a {
+float: left;
+width: 20%;
+text-align: center;
+padding: 5px 0;
+transition: all 0.3s ease;
+color: white;
+font-size: 25px;
+}
+
+@media (min-width: 768px) {
+.container {
+    margin: auto;
+}
+.navbar  {
+        height: auto;
+        width:auto;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .nav {
+        flex-direction: column;
+        align-items: center;
+    }
+} 
+
+.box{
+    margin-top: 270px;
+    font-size: 28px;
+    margin-left: 15px;
+}

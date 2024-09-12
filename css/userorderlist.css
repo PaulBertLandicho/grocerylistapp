@@ -1,0 +1,84 @@
+body{
+    padding: 0;
+    margin: 0;
+    background-color: lightgray;
+    max-height: 599px;
+    display: flex;
+    align-items: center;
+  }
+    
+    body {margin:0}
+    
+    .icon-bar {
+    width: 220px; /* Adjusted width */
+    background-color: white;  
+    position: sticky;
+    top: 0;
+    z-index: 999; /* Ensure it appears above other content */
+    }
+    
+    .icon-bar a {
+    display: block;
+    text-align: left;
+    padding: 12px; /* Adjusted padding */
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    color: black;
+    font-size: 17px; /* Adjusted font size */
+    
+    }
+    
+    .icon-bar a:hover {
+      background-color: maroon;
+      color:white;
+      border-radius: 10px;
+      }
+   .active {
+        color: black; /* Default color */
+    }
+  
+    .active:hover {
+        color: maroon; /* Color on hover */
+    }
+    
+    .containershadow{
+        width: 305px;
+        height: 650px;
+        margin-top: 50px;
+        background-color: white;
+      }
+h1{
+font-size: 35px; /* Adjusted font size */
+margin-bottom: 35px;
+
+}
+
+
+.container-scroll {
+    max-height: 520px; /* Set the maximum height of the container */
+    overflow-y: auto; /* Enable vertical scrolling */
+    margin-top:10px;
+}
+.delete-btn {
+background-color: red; /* Set background color for delete button */
+color: white; /* Set text color */
+border: none; /* Remove border */
+padding: 10px 20px; /* Add padding */
+cursor: pointer; /* Change cursor on hover */
+}
+
+.delete-btn:hover {
+background-color: darkred; /* Darken background color on hover */
+}
+
+.update-btn {
+background-color: green; /* Set background color for update button */
+color: white; /* Set text color */
+border: none; /* Remove border */
+padding: 10px 20px; /* Add padding */
+cursor: pointer; /* Change cursor on hover */
+}
+
+.update-btn:hover {
+background-color: darkgreen; /* Darken background color on hover */
+}

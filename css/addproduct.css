@@ -1,0 +1,198 @@
+body{
+    padding: 0;
+    margin: 0;
+    background-color: lightgray;
+    max-height: 599px;
+    display: flex;
+    align-items: center;
+  }
+    
+    body {margin:0}
+    
+    .icon-bar {
+    width: 220px; /* Adjusted width */
+    background-color: white;  
+    position: sticky;
+    top: 0;
+    z-index: 999; /* Ensure it appears above other content */
+    filter: blur(2px); /* Added blur effect */  
+	
+    }
+    
+    .icon-bar a {
+    display: block;
+    text-align: left;
+    padding: 12px; /* Adjusted padding */
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    color: black;
+    font-size: 17px; /* Adjusted font size */
+    
+    }
+    
+    .icon-bar a:hover {
+      background-color: maroon;
+      color:white;
+      border-radius: 10px;
+      }
+   .active {
+        color: black; /* Default color */
+    }
+  
+    .active:hover {
+        color: maroon; /* Color on hover */
+    }
+    .containershadow{
+        width: 305px;
+        height: 650px;
+        margin-top: 50px;
+        background-color: white;
+        filter: blur(2px); /* Added blur effect */  
+	
+      }
+
+.page-title {
+font-size: 45px;
+font-weight: 600;
+margin-bottom: 170px;
+margin-top: 1px;
+
+color: #333;
+}
+.search-form {
+    display: flex; /* Use flexbox to align items */
+    justify-content: flex-end; /* Align items to the end (right side) */
+    margin-top: 85px;
+    filter: blur(2px); /* Added blur effect */  
+    }
+    .search-form input[type="text"] {
+    width: 200px; /* Adjust the width as needed */
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    }
+    .search-form .search-button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 70px; /* Add some space between the input and button */
+    }
+    
+.product-container {
+display: inline-block; /* Display product containers inline */
+align-items: center;
+margin-bottom: 20px;
+background-color: maroon;
+padding:20px;
+border-radius: 30px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+height: 290px;
+vertical-align: top; /* Align product containers to the top */
+margin-right: none; /* Adjust spacing between product containers */
+width: calc(33.33% - 20px); /* Set the width of each product container to one-third of the container width minus some margin */
+margin: 10px; /* Add margin around each product container */
+box-sizing: border-box; /* Include padding and border in the width */
+filter: blur(2px); /* Added blur effect */  
+}
+
+.product-image {
+flex:100px;
+margin-right: 1px;
+
+}
+
+.product-details {
+flex: 1;
+
+}
+
+.product-name {
+font-size: 24px;
+font-weight: bold;
+margin-bottom: 5px;
+color:white;
+}
+
+.product-actions a {
+display: inline-block;
+margin-right: 10px;
+text-decoration: none;
+padding: 5px 9px;
+border-radius: 5px;
+color: #fff;
+}
+
+.product-actions a.update-btn {
+background-color:white;
+color: maroon;
+height:33px;
+margin-top:5px;
+}
+.product-actions a.delete-btn {
+background-color:white;
+color: maroon;
+height:33px;
+margin-top:5px;
+}
+
+#product-list-container {
+    max-height: 430px; /* Adjust the maximum height as needed */
+    width: 990px; /* Adjust the maximum height as needed */
+    overflow-y: auto; /* Enable vertical scrollbar */
+    white-space: nowrap; /* Prevent wrapping of product containers */
+    padding: 15px; /* Adjust padding */
+    margin-bottom: 20px; /* Adjust margin */
+    position: relative; /* Make the position relative */
+    left: 45%; /* Move container 50% to the right */
+    transform: translateX(-50%); /* Adjust horizontal position */
+    cursor: pointer; /* Change cursor to pointer */
+    display: flex; /* Use flexbox to allow items to wrap */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    margin-left: 40px;
+    
+}
+.floating-container {
+    position: fixed;
+    background-color: white;
+    bottom:70px;
+    left:435px;
+    border-radius: 10px;
+    padding: 0px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 420px;
+    height: 455px;
+    z-index: 1; /* Ensure it's above the blurred background */
+  }
+
+.add-product-btn {
+background-color: #333;
+color: white;
+padding: 10px 20px;
+text-decoration: none;
+border-radius: 5px;
+filter: blur(2px); /* Added blur effect */  
+	
+}
+
+.add-product-btn:hover {
+background-color: #555;
+}
+
+.add-product-button {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Cursor style */
+}
+
+.add-product-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+
+
