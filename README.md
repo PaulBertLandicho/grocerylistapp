@@ -33,4 +33,4 @@ The Grocery List App is a web-based application designed to help users manage th
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/grocerylistapp.git
+   git clone https://github.com/PaulBertLandicho/grocerylistapp.git
