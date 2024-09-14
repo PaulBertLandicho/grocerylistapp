@@ -51,7 +51,7 @@ $total_pages = ceil($total_records / $records_per_page);
                   <option value="6">Baking</option>
                   <option value="7">Vegetables</option>
                 </select>
-                <label for="time_to_cook" style="margin-top:15px; margin-left:17px;">Time: <input type="text" id="time_to_cook" name="time_to_cook">
+                <label for="brand" style="margin-top:15px; margin-left:17px;">Time: <input type="text" id="brand" name="brand">
                 </label>
                 <br>
                 <br>

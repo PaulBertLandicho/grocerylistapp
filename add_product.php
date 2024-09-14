@@ -5,7 +5,7 @@ include 'dbconn.php';
 $name = $_POST['name'];
 $price = $_POST['price'];
 $category_id = $_POST['category_id']; // Change to match your form field name
-$time_to_cook = $_POST['time_to_cook'];
+$brand = $_POST['brand'];
 $weight = $_POST['weight'];
 $volume = $_POST['volume'];
 
@@ -51,8 +51,8 @@ if ($result->num_rows === 0) {
     $conn->query($insertCategory);
 }
 
-$sql = "INSERT INTO Product (name, price, category_id, time_to_cook, image, weight, volume) 
-        VALUES ('$name', '$price', '$category_id', '$time_to_cook', '$image_destination', '$weight', '$volume')";
+$sql = "INSERT INTO Product (name, price, category_id, brand, image, weight, volume) 
+        VALUES ('$name', '$price', '$category_id', '$brand', '$image_destination', '$weight', '$volume')";
 
 if ($conn->query($sql) === TRUE) {
     header("Location: addproductlist.php");

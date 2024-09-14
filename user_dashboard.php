@@ -23,18 +23,18 @@ $offset = ($page - 1) * $records_per_page;
 // Search functionality
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Query with pagination and search
-$sql = "SELECT * FROM product WHERE Name LIKE ? LIMIT ?, ?";
+// Updated SQL query to search both name and brand
+$sql = "SELECT * FROM product WHERE Name LIKE ? OR Brand LIKE ? LIMIT ?, ?";
 $stmt = $conn->prepare($sql);
 $searchTerm = "%$search%";
-$stmt->bind_param("sii", $searchTerm, $offset, $records_per_page);
+$stmt->bind_param("ssii", $searchTerm, $searchTerm, $offset, $records_per_page);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Total records
-$total_records_query = "SELECT COUNT(*) FROM product WHERE Name LIKE ?";
+// Total records query updated to search both name and brand
+$total_records_query = "SELECT COUNT(*) FROM product WHERE Name LIKE ? OR Brand LIKE ?";
 $total_stmt = $conn->prepare($total_records_query);
-$total_stmt->bind_param("s", $searchTerm);
+$total_stmt->bind_param("ss", $searchTerm, $searchTerm);
 $total_stmt->execute();
 $total_records = $total_stmt->get_result()->fetch_row()[0];
 
@@ -46,6 +46,7 @@ $stmt->close();
 $total_stmt->close();
 $conn->close();
 ?>
+
 
 
 <!DOCTYPE html>
@@ -61,29 +62,32 @@ $conn->close();
     <link rel="stylesheet" href="css/user_dashboard.css">
   </head>
   <body>
-    <header class="navbar" style="width: auto; height: 70px;" data-bs-theme="dark">
-      <h2>&nbsp; Hello! <?php echo $users['username']; ?> </h2>
-      <br>
-      <button class="menu-button">
-  <i class="fa fa-align-justify" style="color: darkgreen; margin-right: 15px; transition: transform 0.3s ease;"></i>
-</button>
+  <header class="navbar" style="width: auto; height: 70px;" data-bs-theme="dark">
+    <h2>&nbsp; Hello! <?php echo htmlspecialchars($users['username']); ?> </h2>
+    <br>
+    <button class="menu-button">
+        <i class="fa fa-align-justify" style="color: darkgreen; margin-right: 15px; transition: transform 0.3s ease;"></i>
+    </button>
 
-<!-- Add your menu content as needed -->
+    <!-- Menu content with icons -->
+    <div class="menu-content">
+    <a href="javascript:void(0);" id="settings-link" title="Settings">
+  <i class="fas fa-cog" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Settings</span></i>
+</a>
 
-      <div class="menu-content">
-        <ul>
-          <li>
-            <a href="#settings">Settings</a>
-          </li>
-          <li>
-            <a href="#profile">Profile</a>
-          </li>
-          <li>
-            <a href="loginpage.php">Logout</a>
-          </li>
-        </ul>
-      </div>
-    </header>
+         
+                <a href="#profile" title="Profile">
+                    <i class="fas fa-user" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Profile</span></i>
+                </a>
+                <a href="javascript:void(0);" class="logout-link" onclick="document.getElementById('logout-form').submit();" title="Logout">
+        <i class="fas fa-sign-out-alt" style="font-size: 20px; color: darkgreen;"><span style="margin-left: 10px;">Logout</span></i>
+    </a>
+    <form id="logout-form" action="logout.php" method="POST" style="display: none;">
+        <!-- Form is hidden but used to perform POST request -->
+    </form>
+    </div>
+</header>
+
     <div class="categories-bar">
       <div class="categories">
         <div class="category">
@@ -150,7 +154,7 @@ $conn->close();
       <br>
       <div class="products-list-container">
         <div id="product-list"> <?php
-        $foundProduct = false; // Initialize flag
+        $foundProduct = false; 
         while($product = $result->fetch_assoc()):
             $foundProduct = true; // Set flag to true if a product is found
         ?> <div class="product-container">
@@ -160,7 +164,7 @@ $conn->close();
                     <?php echo htmlspecialchars($product['image']); ?>" data-price="
                     <?php echo htmlspecialchars($product['price']); ?>" data-status="
                     <?php echo $product['available'] == 1 ? 'Available' : 'Sold Out'; ?>" data-time="
-                    <?php echo htmlspecialchars($product['time_to_cook']); ?>" data-weight="
+                    <?php echo htmlspecialchars($product['brand']); ?>" data-weight="
                     <?php echo htmlspecialchars($product['weight']); ?>" data-volume="
                     <?php echo htmlspecialchars($product['volume']); ?>" style="position: relative;">
               <img src="
@@ -176,7 +180,7 @@ $conn->close();
               </a>
               <!-- Display readiness status -->
               <div class="product-actions">
-                <div class="product-name"> <?php echo $product['name']; ?> </div>
+                <div class="product-name" style="color: black;"> <?php echo $product['name']; ?> </div>
                 <a href="javascript:void(0);" class="add-to-cart-btn" data-product-id="
                     <?php echo $product['id']; ?>">
                   <i class="fas fa-shopping-cart"></i>
@@ -206,14 +210,15 @@ $conn->close();
   <span style="font-size: 16px;">Cart</span>
 </a></i>
 <a class="active" href="addproductlist.php">
-  <i class="fa fa-shopping-basket"style="font-size: 24px;"><br>
+  <i class="fas fa-shopping-basket"style="font-size: 24px;"><br>
   <iconify-icon icon="ic:baseline-pending-actions" style="font-size: 24px;"></iconify-icon>
   <span style="font-size: 16px;">Lists</span>
 </a></i>
-<a class="active" href="#">
-  <i class="far fa-user-circle"style="font-size: 24px;"><br>
+<a class="active" href="profile.php">
+  <i class="fas fa-user-circle"style="font-size: 24px;"><br>
   <span style="font-size: 16px;">Profile</span>
 </a></i>
+  </div>
 
       <!-- Modal Overlay -->
       <div id="product-modal" class="modal-overlay">
@@ -222,58 +227,42 @@ $conn->close();
           <div class="modal-product-image">
             <img id="modal-image" src="" alt="Product Image">
           </div>
-          <h2 id="modal-product-name"></h2>
+          <h2 id="modal-product-name" style="font-weight: bold; font-size: 35px; color: maroon;"></h2>
           <div class="modal-product-details">
-            <p>Price: <span id="modal-product-price"></span>
+          <p style="font-weight: bold; color: darkgreen">Price: 
+                <span id="modal-product-price"></span>
             </p>
-            <p>
-              <i class="fas fa-clock" style="color: green;" id="clock-icon"></i>
-              <span id="modal-product-time"></span>
+            <p style="font-weight: bold; color: darkgreen;">Brand:
+                <span id="modal-product-time"></span>
             </p>
-            <p id="modal-product-weight"></p>
-            <p id="modal-product-volume"></p>
+            <p id="modal-product-weight" style="font-weight: bold; color: darkgreen;"></p>
+            <p id="modal-product-volume" style="font-weight: bold; color: darkgreen;"></p>
             <p>
-              <i class="fas fa-calendar-day" style="color: blue;" id="calendar-icon"></i>
-              <span id="modal-current-date"></span>
+              <i class="fas fa-calendar-day" style="color: maroon; text-color: black;" id="calendar-icon"></i>
+              <span id="modal-current-date" style="color: black;"></span>
             </p>
           </div>
         </div>
       </div>
 
+      <!-- Settings Modal -->
+<div id="settings-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+        <span class="close-modal" id="close-settings-modal">&times;</span>
+        <h2 style="color: maroon;">Settings</h2>
+        <div class="settings-option">
+            <label for="theme-toggle" style="color: black;">Dark Mode</label>
+            <input type="checkbox" id="theme-toggle">
+        </div>
+    </div>
+</div>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="js/user_dashboard.js">
 </script>
-<script>
-   // Get button and menu elements
-const menuButton = document.querySelector('.menu-button');
-const menuContent = document.querySelector('.menu-content');
-const menuIcon = menuButton.querySelector('i'); 
-
-menuButton.addEventListener('click', function() {
-    if (menuContent.style.display === 'block') {
-        menuContent.style.display = 'none';
-        menuIcon.classList.remove('fa-times');
-        menuIcon.classList.add('fa-align-justify');
-        menuIcon.style.transform = 'rotate(0deg)'; 
-    } else {
-        menuContent.style.display = 'block';
-        menuIcon.classList.remove('fa-align-justify');
-        menuIcon.classList.add('fa-times');
-        menuIcon.style.transform = 'rotate(180deg)'; 
-    }
-});
-
-// Close menu if clicked outside
-window.addEventListener('click', function(event) {
-    if (!menuButton.contains(event.target) && !menuContent.contains(event.target)) {
-        menuContent.style.display = 'none';
-        menuIcon.classList.remove('fa-times');
-        menuIcon.classList.add('fa-align-justify');
-        menuIcon.style.transform = 'rotate(0deg)'; 
-    }
-});
+<script src="js/settingsdarkmode.js"></script>
 
 
-</script>
 </body>
 </html>

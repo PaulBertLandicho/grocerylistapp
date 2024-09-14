@@ -21,8 +21,30 @@ $result = $conn->query($sql);
 
 </head>
 <body>
-<center><h2><b>MY FAVORITE</b></center></h2><br><br>
+<header class="navbar" style="width: auto; margin-bottom: 20px;" data-bs-theme="dark">
+        <h1 style="font-weight: bold; font-size: 35px; margin-left: 10px;">My Favorites</h1>
+        <button class="menu-button">
+        <i class="fa fa-align-justify" style="color: darkgreen; margin-right: 15px; transition: transform 0.3s ease;"></i>
+    </button>
 
+    <!-- Menu content with icons -->
+    <div class="menu-content">
+    <a href="javascript:void(0);" id="settings-link" title="Settings">
+  <i class="fas fa-cog" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Settings</span></i>
+</a>
+
+         
+                <a href="#profile" title="Profile">
+                    <i class="fas fa-user" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Profile</span></i>
+                </a>
+                <a href="javascript:void(0);" class="logout-link" onclick="document.getElementById('logout-form').submit();" title="Logout">
+        <i class="fas fa-sign-out-alt" style="font-size: 20px; color: darkgreen;"><span style="margin-left: 10px;">Logout</span></i>
+    </a>
+    <form id="logout-form" action="logout.php" method="POST" style="display: none;">
+        <!-- Form is hidden but used to perform POST request -->
+    </form>
+    </div>
+</header> 
 <div class="scrollable-container">
     <?php
     if ($result->num_rows > 0) {
@@ -36,7 +58,7 @@ $result = $conn->query($sql);
             echo '<div class="product-details">';
             echo "<div style='color: maroon; font-size:22px;'><b>" . $row['name'] . "</b></div>";
             // Display "Time to Cook" with clock icon
-            echo "<div><i class='fas fa-clock'style='color: green;'></i>" . $row['time_to_cook'] . "</div>";
+            echo "<div style='color: black;'>" . $row['brand'] . "</div>";
 
             // Display availability with color and icon
             if ($row['available'] == 1) {
@@ -46,7 +68,7 @@ $result = $conn->query($sql);
             }
             echo "<a href='add_to_cart.php?product_id=" . $row['id'] . "' class='cart-btn' style='color: maroon; font-size: 22px;'><i class='fas fa-shopping-cart'></i></a>";
             // Display product price
-            echo "<span style='font-size: 24px;'>₱" . $row['price'] . "</span>";        
+            echo "<span style='font-size: 24px; color: black;'>₱" . $row['price'] . "</span>";        
             echo "<form action='remove_favorite.php' method='post'>";
             echo "<input type='hidden' name='product_id' value='" . $row['id'] . "'>";
             echo "<button type='submit' class='button-white' style='border: none; background-color: transparent;'><i class='fas fa-heart' style='font-size: 25px; color: red; margin-right:5px; margin-left:160px;'></i></button>";
@@ -71,7 +93,7 @@ $result = $conn->query($sql);
 <span style="font-size: 16px;">Home</span>
 </a></i>
 <a class="active" href="Myfavorite.php">
-  <i class="fas fa-heart" style="font-size: 25px; color: maroon"><br>
+  <i class="fas fa-heart" style="color: maroon;"><br>
   <span style="font-size: 16px;">Favorite</span>
 </a></i>
 <a class="active" href="cartlist.php">
@@ -79,14 +101,28 @@ $result = $conn->query($sql);
   <span style="font-size: 16px;">Cart</span>
 </a></i>
 <a class="active" href="addproductlist.php">
-  <i class="fa fa-shopping-basket"style="font-size: 24px;"><br>
+  <i class="fas fa-shopping-basket"style="font-size: 24px;"><br>
   <iconify-icon icon="ic:baseline-pending-actions" style="font-size: 24px;"></iconify-icon>
   <span style="font-size: 16px;">Lists</span>
 </a></i>
 <a class="active" href="profile.php">
-  <i class="far fa-user-circle"style="font-size: 24px;"><br>
+  <i class="fas fa-user-circle"style="font-size: 24px;"><br>
   <span style="font-size: 16px;">Profile</span>
 </a></i>
+   </div>
+ 
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+        <span class="close-modal" id="close-settings-modal">__________________</span>
+        <h2 style="color: maroon;">Settings</h2>
+        <div class="settings-option">
+            <label for="theme-toggle" style="color: black;">Dark Mode</label>
+            <input type="checkbox" id="theme-toggle">
+        </div>
+    </div>
+</div>
+<script src="js/settingsdarkmode.js"></script>
 
 </body>
 </html>

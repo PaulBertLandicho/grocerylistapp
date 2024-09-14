@@ -9,8 +9,11 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$sql = "SELECT * FROM user WHERE id='$user_id'";
-$result = $conn->query($sql);
+$sql = "SELECT * FROM user WHERE id=?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
 $users = $result->fetch_assoc();
 
 // Pagination
@@ -24,20 +27,32 @@ $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : 
 // Specify the category_id you want to search within
 $category_id = 5; // You can dynamically set this based on user choice or another parameter
 
-// Query with pagination and search
+// Query with pagination and search, including brand
 $sql = "SELECT * FROM product 
-        WHERE category_id = $category_id 
-        AND name LIKE '%$search%' 
-        LIMIT $offset, $records_per_page";
-$result = $conn->query($sql);
+        WHERE category_id = ? 
+        AND (name LIKE ? OR brand LIKE ?) 
+        LIMIT ?, ?";
+$stmt = $conn->prepare($sql);
+$searchTerm = "%$search%";
+$stmt->bind_param("issii", $category_id, $searchTerm, $searchTerm, $offset, $records_per_page);
+$stmt->execute();
+$result = $stmt->get_result();
 
-// Total records
-$total_records = mysqli_num_rows($conn->query("SELECT * FROM product WHERE category_id = $category_id AND name LIKE '%$search%'"));
+// Total records query with search for both name and brand
+$total_records_query = "SELECT COUNT(*) FROM product WHERE category_id = ? AND (name LIKE ? OR brand LIKE ?)";
+$total_stmt = $conn->prepare($total_records_query);
+$total_stmt->bind_param("iss", $category_id, $searchTerm, $searchTerm);
+$total_stmt->execute();
+$total_records = $total_stmt->get_result()->fetch_row()[0];
 
 // Total pages
 $total_pages = ceil($total_records / $records_per_page);
-?>
 
+// Close statements
+$stmt->close();
+$total_stmt->close();
+$conn->close();
+?>
 
 
 <!DOCTYPE html>
@@ -54,9 +69,30 @@ $total_pages = ceil($total_records / $records_per_page);
 </head>
 <body>
 <header class="navbar" style="width: auto; height: 70px;" data-bs-theme="dark">
-      <h2>&nbsp; Hello! <?php echo $users['username']; ?> </h2>
-      <br>
-    </header>
+    <h2>&nbsp; Hello! <?php echo htmlspecialchars($users['username']); ?> </h2>
+    <br>
+    <button class="menu-button">
+        <i class="fa fa-align-justify" style="color: darkgreen; margin-right: 15px; transition: transform 0.3s ease;"></i>
+    </button>
+
+    <!-- Menu content with icons -->
+    <div class="menu-content">
+    <a href="javascript:void(0);" id="settings-link" title="Settings">
+  <i class="fas fa-cog" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Settings</span></i>
+</a>
+
+         
+                <a href="#profile" title="Profile">
+                    <i class="fas fa-user" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Profile</span></i>
+                </a>
+                <a href="javascript:void(0);" class="logout-link" onclick="document.getElementById('logout-form').submit();" title="Logout">
+        <i class="fas fa-sign-out-alt" style="font-size: 20px; color: darkgreen;"><span style="margin-left: 10px;">Logout</span></i>
+    </a>
+    <form id="logout-form" action="logout.php" method="POST" style="display: none;">
+        <!-- Form is hidden but used to perform POST request -->
+    </form>
+    </div>
+</header>
     <div class="categories-bar">
       <div class="categories">
         <div class="category">
@@ -125,57 +161,54 @@ $total_pages = ceil($total_records / $records_per_page);
 </h3>
 <center><br>
 <div class="products-list-container">
-    <div id="product-list">
-        <?php
+        <div id="product-list"> <?php
         $foundProduct = false; // Initialize flag
         while($product = $result->fetch_assoc()):
             $foundProduct = true; // Set flag to true if a product is found
-        ?>
-        <div class="product-container">
-            <div class="product-image" 
-                 data-id="<?php echo $product['id']; ?>"
-                 data-name="<?php echo htmlspecialchars($product['name']); ?>"
-                 data-image="<?php echo htmlspecialchars($product['image']); ?>"
-                 data-price="<?php echo htmlspecialchars($product['price']); ?>"
-                 data-status="<?php echo $product['available'] == 1 ? 'Available' : 'Not Available'; ?>"
-                 data-time="<?php echo htmlspecialchars($product['time_to_cook']); ?>"
-                 style="position: relative;">
-                <img src="<?php echo $product['image']; ?>" alt="Product Image" style="width: 340px; height: 190px; border-radius: 15px;">
-                <!-- Heart icon for adding to favorites -->
-                <a href="javascript:void(0);" class="heart-btn" data-product-id="<?php echo $product['id']; ?>">
-                    <i id="heart-icon-<?php echo $product['id']; ?>" class="far fa-heart" style="color:black; position: absolute; top: 10px; right: 10px; font-size: 25px; background-color: white; border-radius: 50%; padding: 5px;"></i>
+        ?> <div class="product-container">
+            <div class="product" data-id="
+                    <?php echo $product['id']; ?>" data-name="
+                    <?php echo htmlspecialchars($product['name']); ?>" data-image="
+                    <?php echo htmlspecialchars($product['image']); ?>" data-price="
+                    <?php echo htmlspecialchars($product['price']); ?>" data-status="
+                    <?php echo $product['available'] == 1 ? 'Available' : 'Sold Out'; ?>" data-time="
+                    <?php echo htmlspecialchars($product['brand']); ?>" data-weight="
+                    <?php echo htmlspecialchars($product['weight']); ?>" data-volume="
+                    <?php echo htmlspecialchars($product['volume']); ?>" style="position: relative;">
+              <img src="
+                    <?php echo $product['image']; ?>" alt="Product Image" style="width: 340px; height: 190px; border-radius: 15px;">
+              <a href="javascript:void(0);" class="heart-btn" data-product-id="
+                    <?php echo $product['id']; ?>">
+                <i id="heart-icon-
+                    <?php echo $product['id']; ?>" class="far fa-heart" style="color:black; position: absolute; top: 10px; right: 10px; font-size: 25px; background-color: white; border-radius: 50%; padding: 5px;">
+                </i>
+              </a>
+              <a href="javascript:void(0);" class="details-btn" data-product-id="
+                    <?php echo $product['id']; ?>" style="position: absolute; bottom: 95px; left: 5px; padding: 85px 110px; border-radius: 5px; text-decoration: none; font-size: 14px;">
+              </a>
+              <!-- Display readiness status -->
+              <div class="product-actions">
+              <div class="product-name" style="color: black;"> <?php echo $product['name']; ?> </div>
+                <a href="javascript:void(0);" class="add-to-cart-btn" data-product-id="
+                    <?php echo $product['id']; ?>">
+                  <i class="fas fa-shopping-cart"></i>
                 </a>
-                <div class="product-details">                      
-                    <div class="product-actions">
-                        <div class="product-name"><?php echo htmlspecialchars($product['name']); ?></div>
-                        <a href="javascript:void(0);" class="add-to-cart-btn" data-product-id="<?php echo $product['id']; ?>">
-                            <i class="fas fa-shopping-cart"></i>
-                        </a>
-                    </div>
-                    <div class="product-actions">
-                        <?php if ($product['available'] == 1): ?>
-                            <span style="color: green; margin-right:30px;"><i class="fas fa-check-circle"></i>Available</span>
-                        <?php else: ?>
-                            <span style="color: red; margin-right:20px;"><i class="fas fa-times-circle"></i> Not Available</span>
-                        <?php endif; ?>
-                    </div>
-                </div>
+              </div>
+              <div class="product-actions"> <?php if ($product['available'] == 1): ?> <span style="color: green; margin-right:30px;">
+                  <i class="fas fa-check-circle"></i> Available </span> <?php else: ?> <span style="color: red; margin-right:20px;">
+                  <i class="fas fa-times-circle"></i> Sold Out </span> <?php endif; ?> </div>
             </div>
-        </div>
-    <?php endwhile; ?>
-    <?php if (!$foundProduct): ?>
-        <div class="no-product-found">
-            <h3 style="color: maroon; opacity: 0.7; margin-top: 5em;">List is Empty.</h3>
-        </div>
-    <?php endif; ?>
-    </div>
-</center>
+          </div> <?php endwhile; ?> <?php if (!$foundProduct): ?> <div class="no-product-found">
+            <h3 style="color: maroon; opacity: 0.7; margin-top: 5em;">Product not found</h3>
+          </div> <?php endif; ?> </div>
+      </div>
+    </center>
 
 
 
-<div class="icon-bar" >
+    <div class="icon-bar" >
  <a class="active" href="user_dashboard.php">
- <i class="fas fa-store-alt" style="font-size: 25px;"><br>
+ <i class="fas fa-store-alt" style="font-size: 25px; color: maroon"><br>
 <span style="font-size: 16px;">Home</span>
 </a></i>
 <a class="active" href="Myfavorite.php">
@@ -187,36 +220,60 @@ $total_pages = ceil($total_records / $records_per_page);
   <span style="font-size: 16px;">Cart</span>
 </a></i>
 <a class="active" href="addproductlist.php">
-  <i class="fa fa-shopping-basket"style="font-size: 24px;"><br>
+  <i class="fas fa-shopping-basket"style="font-size: 24px;"><br>
   <iconify-icon icon="ic:baseline-pending-actions" style="font-size: 24px;"></iconify-icon>
   <span style="font-size: 16px;">Lists</span>
 </a></i>
 <a class="active" href="profile.php">
-  <i class="far fa-user-circle"style="font-size: 24px;"><br>
+  <i class="fas fa-user-circle"style="font-size: 24px;"><br>
   <span style="font-size: 16px;">Profile</span>
 </a></i>
+   </div>
 
-<!-- Modal Overlay -->
-<div id="product-modal" class="modal-overlay">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <div class="modal-product-image">
+ <!-- Modal Overlay -->
+ <div id="product-modal" class="modal-overlay">
+        <div class="modal-content">
+          <span class="close-modal"></span>
+          <div class="modal-product-image">
             <img id="modal-image" src="" alt="Product Image">
-        </div>
-        <div class="modal-product-details">
-            <h2 id="modal-product-name"></h2>
-            <p id="modal-product-description"></p>
-            <p>Price: <span id="modal-product-price"></span></p>
-            <p>
-                <i class="fas fa-clock" style="color: green;"id="clock-icon"></i>
+          </div>
+          <h2 id="modal-product-name" style="font-weight: bold; font-size: 35px; color: maroon;"></h2>
+          <div class="modal-product-details">
+          <p style="font-weight: bold; color: darkgreen">Price: 
+                <span id="modal-product-price"></span>
+            </p>
+            <p style="font-weight: bold; color: darkgreen;">Brand:
                 <span id="modal-product-time"></span>
-            </p>        </div>
+            </p>
+            <p id="modal-product-weight" style="font-weight: bold; color: darkgreen;"></p>
+            <p id="modal-product-volume" style="font-weight: bold; color: darkgreen;"></p>
+            <p>
+            <i class="fas fa-calendar-day" style="color: maroon; text-color: black;" id="calendar-icon"></i>
+              <span id="modal-current-date" style="color: black;"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+<!-- Settings Modal -->
+<div id="settings-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+        <span class="close-modal" id="close-settings-modal">&times;</span>
+        <h2 style="color: maroon;">Settings</h2>
+        <div class="settings-option">
+            <label for="theme-toggle" style="color: black;">Dark Mode</label>
+            <input type="checkbox" id="theme-toggle">
+        </div>
     </div>
 </div>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="js/user_dashboard.js">
 </script>
+
+<script src="js/settingsdarkmode.js"></script>
+
 
 </body>
 </html>

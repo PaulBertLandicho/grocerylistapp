@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
     $price = $_POST['price'];
     $category_id = intval($_POST['category_id']); // Ensure this is an integer
-    $time_to_cook = $_POST['time_to_cook'];
+    $brand = $_POST['brand'];
     $available = isset($_POST['available']) ? 1 : 0; // Check if checkbox is checked
 
      // Check if a new image is uploaded
@@ -40,10 +40,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
 
         // Update product with the new image and Availability status
-        $sql = "UPDATE product SET name='$name', price='$price', category_id='$category_id', time_to_cook='$time_to_cook', image='$target_file', available='$available' WHERE id=$product_id";
+        $sql = "UPDATE product SET name='$name', price='$price', category_id='$category_id', brand='$brand', image='$target_file', available='$available' WHERE id=$product_id";
     } else {
         // Update product without changing the image but update ready status
-        $sql = "UPDATE product SET name='$name', price='$price', category_id='$category_id', time_to_cook='$time_to_cook', available='$available' WHERE id=$product_id";
+        $sql = "UPDATE product SET name='$name', price='$price', category_id='$category_id', brand='$brand', available='$available' WHERE id=$product_id";
     }
 
     if ($conn->query($sql) === TRUE) {
@@ -166,8 +166,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
                     <div class="mb-3">
-                        <label for="time_to_cook" class="form-label">Time to Cook:</label>
-                        <input type="text" id="time_to_cook" name="time_to_cook" class="form-control" value="<?php echo htmlspecialchars($product['time_to_cook']); ?>" required>
+                        <label for="brand" class="form-label">Product Brand:</label>
+                        <input type="text" id="brand" name="brand" class="form-control" value="<?php echo htmlspecialchars($product['brand']); ?>" required>
                     </div>
 
                     <div class="mb-3">

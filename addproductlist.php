@@ -1,20 +1,53 @@
 
 <?php
 include 'dbconn.php';
+session_start();
 
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: user_login_page.php?error=Please login first");
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT * FROM user WHERE id=?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$users = $stmt->get_result()->fetch_assoc();
+
+// Pagination
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $records_per_page = 15;
 $offset = ($page - 1) * $records_per_page;
 
+// Search functionality
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-$sql = "SELECT * FROM product WHERE Name LIKE '%$search%' LIMIT $offset, $records_per_page";
-$result = $conn->query($sql);
+// Updated SQL query to search both name and brand
+$sql = "SELECT * FROM product WHERE Name LIKE ? OR Brand LIKE ? LIMIT ?, ?";
+$stmt = $conn->prepare($sql);
+$searchTerm = "%$search%";
+$stmt->bind_param("ssii", $searchTerm, $searchTerm, $offset, $records_per_page);
+$stmt->execute();
+$result = $stmt->get_result();
 
-$total_records = mysqli_num_rows($conn->query("SELECT * FROM product"));
+// Total records query updated to search both name and brand
+$total_records_query = "SELECT COUNT(*) FROM product WHERE Name LIKE ? OR Brand LIKE ?";
+$total_stmt = $conn->prepare($total_records_query);
+$total_stmt->bind_param("ss", $searchTerm, $searchTerm);
+$total_stmt->execute();
+$total_records = $total_stmt->get_result()->fetch_row()[0];
 
+// Total pages
 $total_pages = ceil($total_records / $records_per_page);
+
+// Close statements
+$stmt->close();
+$total_stmt->close();
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,10 +62,40 @@ $total_pages = ceil($total_records / $records_per_page);
     
 </head>
 <body>
-    <header class="text">
-        <h1 style="font-weight: bold; font-size: 35px; text-align: center;">Shopping List</h1>
-    </header>
-    <div class="search-form">
+<header class="navbar" style="width: auto;;" data-bs-theme="dark">
+        <h1 style="font-weight: bold; font-size: 35px; margin-left: 10px;">Shopping List</h1>
+        <button class="menu-button">
+        <i class="fa fa-align-justify" style="color: darkgreen; margin-right: 15px; transition: transform 0.3s ease;"></i>
+    </button>
+
+    <!-- Menu content with icons -->
+    <div class="menu-content">
+    <a href="javascript:void(0);" id="settings-link" title="Settings">
+  <i class="fas fa-cog" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Settings</span></i>
+</a>
+                <a href="#profile" title="Profile">
+                    <i class="fas fa-user" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Profile</span></i>
+                </a>
+                <a href="javascript:void(0);" class="logout-link" onclick="document.getElementById('logout-form').submit();" title="Logout">
+        <i class="fas fa-sign-out-alt" style="font-size: 20px; color: darkgreen;"><span style="margin-left: 10px;">Logout</span></i>
+    </a>
+    <form id="logout-form" action="logout.php" method="POST" style="display: none;">
+        <!-- Form is hidden but used to perform POST request -->
+    </form>
+    </div>
+</header> 
+<!-- Settings Modal -->
+<div id="settings-modal" class="settings-overlay" style="display: none;">
+    <div class="modal-box">
+        <span class="close-modal" id="close-settings-modal">&times;</span>
+        <h2 style="color: maroon;">Settings</h2>
+        <div class="settings-option">
+            <label for="theme-toggle" style="color: black;">Dark Mode</label>
+            <input type="checkbox" id="theme-toggle">
+        </div>
+    </div>
+</div>
+   <div class="search-form">
         <form action="" method="GET">
             <input type="text" name="search" placeholder="Search...">
             <button type="submit" class="search-button">
@@ -49,7 +112,7 @@ $total_pages = ceil($total_records / $records_per_page);
           <?php while($product = $result->fetch_assoc()):
           $foundProduct = true;
           ?>
-           <div class="product-container">
+           <div class="product-container" style="box-shadow: 0 2px 10px rgba(0, 0, 0, 100.2);">
             <div class="product-image">
             <img src="<?php echo $product['image']; ?>" alt="Product Image" style="width: 150px; height: 100px;">
 <a href="javascript:void(0);" class="cart-btn" data-product-id="<?php echo $product['id']; ?>">
@@ -60,24 +123,27 @@ $total_pages = ceil($total_records / $records_per_page);
                   <?php if ($product['available'] == 1): ?> <span style="color: green; margin-right:10px;">
                 <i class="fas fa-check-circle"></i>Available </span> <?php else: ?> <span style="text-color: lightgray; margin-right:10px;">
                 <i class="fas fa-times-circle"></i> Sold Out </span> <?php endif; ?>
-           <div class="product-name" style="font-weight: bold;"> <?php echo $product['name']; ?> </div>
-           <div class="product-name" style="font-size: 10px;"> <?php echo $product['price']; ?> </div>
-           <div class="product-name" style="font-size: 10px;"> <?php echo $product['weight']; ?>kg</div>
-              <div class="product-actions">
-              <a href="adminupdate_product_form.php?Id=
-                    <?= $product['id']; ?>" class="update-btn">
-                  <i class="far fa-edit" style="font-size: 18px;"></i>
-                </a>
-                    <a href="delete.php?Id=
-                    <?= $product['id']; ?>" class="delete-btn">
-                  <i class="fas fa-trash-alt" style="font-size: 17px;"></i>
-                </a>
+           <div class="product-name" style="font-weight: bold; color: maroon;"> <?php echo $product['name']; ?> </div>
+           <div class="product-price" style="font-size: 20px; font-weight: bold; color: black;">₱<?php echo $product['price']; ?> 
+           <span class="product-weight" style="margin-left: 20px;font-size: 10px; color: black;"> <?php echo $product['weight']; ?>kg</span></div>
+           <div class="product-actions">
+                    <!-- Edit Icon -->
+                    <a href="adminupdate_product_form.php?Id=<?= htmlspecialchars($product['id']); ?>" class="update-btn">
+                        <i class="far fa-edit" style="font-size: 18px;">
+                    </a></i>
+                    <!-- Delete Icon -->
+                    <a href="delete.php?Id=<?= htmlspecialchars($product['id']); ?>" class="delete-btn">
+                        <i class="fas fa-trash-alt" style="font-size: 17px;">
+                    </a></i>
+                     <!-- Share Icon -->
+                     <a href="mailto:?subject=Check out this product&body=I found this product that might interest you:%0A%0AName: <?= urlencode($product['name']); ?>%0APrice: <?= urlencode($product['price']); ?>%0AWeight: <?= urlencode($product['weight']); ?>%0A%0AHere is the link to the product: [Insert URL here]" class="share-btn" title="Share via Email">
+                        <i class="fas fa-share" style="font-size: 20px; margin-left: 75px;">
+                    </a></i>
               </div>
             </div>
           </div> <?php endwhile; ?>
 <?php if (!$foundProduct): ?>
   <div class="no-product-found">
-        <img src="path/to/empty-list-image.png" alt="Empty List" class="empty-list-image">
         <h3 style="color: maroon; opacity: 0.7; font-weight: bold; margin-top: 1em;">Your List is Empty.</h3>
     </div>
 <?php endif; ?>
@@ -85,7 +151,7 @@ $total_pages = ceil($total_records / $records_per_page);
     </div>
         </div>
 
-   <div class="icon-bar" >
+        <div class="icon-bar" >
  <a class="active" href="user_dashboard.php">
  <i class="fas fa-store-alt" style="font-size: 25px;"><br>
 <span style="font-size: 16px;">Home</span>
@@ -99,15 +165,15 @@ $total_pages = ceil($total_records / $records_per_page);
   <span style="font-size: 16px;">Cart</span>
 </a></i>
 <a class="active" href="addproductlist.php">
-  <i class="fa fa-shopping-basket"style="font-size: 24px; color: maroon"><br>
+  <i class="fas fa-shopping-basket"style="font-size: 24px; color: maroon;"><br>
   <iconify-icon icon="ic:baseline-pending-actions" style="font-size: 24px;"></iconify-icon>
   <span style="font-size: 16px;">Lists</span>
 </a></i>
 <a class="active" href="profile.php">
-  <i class="far fa-user-circle"style="font-size: 24px;"><br>
+  <i class="fas fa-user-circle"style="font-size: 24px;"><br>
   <span style="font-size: 16px;">Profile</span>
 </a></i>
-                </div>
+   </div>
 
     <!-- Modal Overlay -->
     <div id="modalOverlay" class="modal-overlay">
@@ -123,15 +189,15 @@ $total_pages = ceil($total_records / $records_per_page);
     <input type="file" id="profilePicture" name="image" accept="image/*" onchange="previewProfilePicture(this);" style="display: none;">
        </div>
                     <div class="mb-3">
-                        <label for="productName" class="form-label">Product Name</label>
+                        <label for="productName" class="form-label">Product Name :</label>
                         <input type="text" class="form-control" id="productName" name="name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="productPrice" class="form-label">Product Price</label>
+                        <label for="productPrice" class="form-label">Product Price :</label>
                         <input type="text" class="form-control" id="productPrice" name="price" placeholder="₱" required>
                     </div>
                     <div class="mb-3">
-                        <label for="productCategory" class="form-label">Select Category</label>
+                        <label for="productCategory" class="form-label">Select Category :</label>
                         <select id="productCategory" name="category_id" class="form-control" required>
                             <option value="1">Fruits</option>
                             <option value="2">Protein</option>
@@ -143,9 +209,9 @@ $total_pages = ceil($total_records / $records_per_page);
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="timeToCook" class="form-label">Time to Cook</label>
-                        <input type="text" class="form-control" id="timeToCook" name="time_to_cook" required>
-                        <input type="number" step="0.01" name="weight" placeholder="Weight (grams)">
+                        <label for="brand" class="form-label">Product Brand :</label>
+                        <input type="text" class="form-control" id="brand" name="brand" required>
+                        <input type="number" step="" name="weight" placeholder="Weight (grams)">
                         <input type="number" step="0.01" name="volume" placeholder="Volume (milliliters)">
                     </div>
                     <button type="submit" class="btn btn-primary">Add Product</button>
@@ -154,10 +220,13 @@ $total_pages = ceil($total_records / $records_per_page);
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="js/addproductlist.js">
     </script>
+    <script src="js/settingsdarkmode.js"></script>
+
 </body>
 </html>
 

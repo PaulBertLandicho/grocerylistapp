@@ -12,7 +12,7 @@
 <body>
     <div class="form-box">
     <center><div class="center-icon">
-        <img src="uploads/logopic.PNG" alt="423062764-1342544113808335-7405620093325838006-n-removebg-preview" style="width:300px; height:130px; margin-bottom: 10px;">
+        <img src="uploads/logopic.png" alt="423062764-1342544113808335-7405620093325838006-n-removebg-preview" style="width:300px; height:130px; margin-bottom: 10px;">
         </div>
 
         <form action="login_action.php" method="POST" id="login" class="input-group">
@@ -26,7 +26,7 @@
                 <input type="password" class="input-field" placeholder="Password" name="password">
                 <i class="far fa-eye show-hide-password" onclick="togglePassword(this, 'password')"></i>
             </div>
-            <a href="Forgotpassword.php" class="forgot-password">Forgot password?</a><br><br><br>
+            <a href="#" class="forgot-password">Forgot password?</a><br><br><br>
             <center><button type="submit" class="submit" value="Login" style="width: 110px;font-size:17px; height: 40px; background-color: maroon; color: #fff; border: none; border-radius: 3px;">Login</button>
             <br><br><br><br>
             <center><p class="message">Don't have any account? <a href="registerpage.php" style="color:maroon;">Register</a></p>
