@@ -8,10 +8,12 @@ The Grocery List App is a web-based application designed to help users manage th
 
 - **User Authentication**: Secure login and registration system.
 - **Create Grocery Lists**: Users can create multiple grocery lists.
-- **Add/Remove Items**: Easily add or remove items from any grocery list.
-- **Mark Items as Purchased**: Track which items have been purchased.
-- **View Lists**: View all your grocery lists and their items.
-- **Profile Management**: Update your profile and profile picture.
+- **Add/Edit/Remove Items**: Easily add or remove items from any grocery list then edit modify existing items to update their details,.
+- **Mark Items as Purchased**: Track which items have been purchased when checking.
+- **View Lists**: View all your grocery lists and their items product detials.
+- **Dark Mode**: Toggle between light and dark themes for a comfortable viewing experience.
+- **Share via Email**: Share your grocery lists with friends or family directly through email
+- **Profile Management**: Upload your profile and profile picture.
 
 ## Technologies Used
 
