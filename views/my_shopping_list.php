@@ -1,6 +1,6 @@
 <?php
-session_start();
 include 'dbconn.php';
+session_start();
 
 $user_id = $_SESSION['user_id'];
 
@@ -10,11 +10,21 @@ $search_query = isset($_GET['search']) ? $_GET['search'] : '';
 // Sanitize the search input to prevent SQL injection
 $search_query = $conn->real_escape_string($search_query);
 
-// Construct the SQL query with a search filter
+// Determine sorting criteria
+$sort_by = isset($_GET['sort']) ? $_GET['sort'] : 'name'; // default to sorting by name
+$sort_order = isset($_GET['order']) ? $_GET['order'] : 'ASC'; // default to ascending order
+
+// Construct the SQL query with a search filter and sorting
 $sql = "SELECT p.* 
         FROM favorites f 
         INNER JOIN product p ON f.product_id = p.id 
-        WHERE f.user_id = $user_id AND p.name LIKE '%$search_query%'";
+        WHERE f.user_id = $user_id AND p.name LIKE '%$search_query%'
+        ORDER BY 
+            CASE 
+                WHEN '$sort_by' = 'name' THEN p.name
+                WHEN '$sort_by' = 'price' THEN p.price
+            END $sort_order";
+
 
 $result = $conn->query($sql);
 
@@ -45,10 +55,11 @@ if ($user_result->num_rows > 0) {
 </head>
 
 <body>
-    <header class="navbar" style="width: auto;;" data-bs-theme="dark">
-        <h2 style="font-weight: bold; color: maroon; margin-left: 10px;">Hello! <?php echo htmlspecialchars($user['username']); ?> </h2>
+<header class="navbar" style="width: auto;" data-bs-theme="dark" id="navbar">
+    <h2 id="greeting" style="font-weight: bold; margin-left: 10px;">Hello! <?php echo htmlspecialchars($user['username']); ?> </h2>
 
-        <button class="menu-button">
+
+        <button class="menu-button">    
             <i class="fa fa-align-justify" style="color: darkgreen; margin-right: 15px; transition: transform 0.3s ease;"></i>
         </button>
 
@@ -92,8 +103,18 @@ if ($user_result->num_rows > 0) {
         </form>
     </div>
     <h1 style="font-weight: bold; font-size: 30px; text-align: center; color: darkgreen; margin-left: 10px;">My Shopping List</h1>
-
-    <div class="product-list">
+    <div class="sort-options">
+        <form action="" method="GET" class="d-flex">
+        <div class="form-group me-2">
+            <select name="sort" onchange="this.form.submit()">
+                <option value="name" <?php if ($sort_by == 'name') echo 'selected'; ?>>Sort by Name</option>
+                <option value="category" <?php if ($sort_by == 'category') echo 'selected'; ?>>Sort by Category</option>
+                <option value="price" <?php if ($sort_by == 'price') echo 'selected'; ?>>Sort by Price</option>
+            </select>
+            </div>
+        </form>
+    </div>
+   <div class="product-list">
         <div class="list-wrapper">
             <?php $foundProduct = false;?>
                 <?php while($product = $result->fetch_assoc()):
@@ -125,7 +146,7 @@ if ($user_result->num_rows > 0) {
                                             </div>
                                             <div class="product-price" style="font-size: 20px; font-weight: bold; color: black;">₱
                                                 <?php echo $product['price']; ?>
-                                                    <span class="product-weight" style="margin-left: 20px;font-size: 10px; color: black;"> <?php echo $product['weight']; ?>kg</span></div>
+                                                    <span class="product-weight" style="margin-left: 20px;font-size: 10px; color: black;"> <?php echo $product['weight']; ?></span></div>
                                             <div class="product-actions">
 
                                                 <!-- Delete Icon -->
@@ -137,11 +158,10 @@ if ($user_result->num_rows > 0) {
 
                                               <!-- Mark as Purchased Button -->
                                       <?php if ($product['purchased'] == 0): ?>
-                                  <a href="mark_as_purchased.php?id=<?= htmlspecialchars($product['id']); ?>" class="btn btn-warning">
+                                  <a href="mark_as_purchased.php?id=<?= htmlspecialchars($product['id']); ?>" class="btn btn-warning" style="font-size: 15px;">
                               <i class="fas fa-check"></i>
                             </a>
                         <?php else: ?>
-                    <span style="color: green; font-size: 15px;"></span>
                 <?php endif; ?>
                 
                      <!-- Share Icon -->
@@ -149,7 +169,7 @@ if ($user_result->num_rows > 0) {
                         <i class="fas fa-share" style="position: absolute; top: 200px; right: 8px; text-decoration: none; color: inherit; font-size: 20px;">
                     </a></i>
                     </form>
-                                            </div>
+                  </div>
                         </div>
                     </div>
                     <?php endwhile; ?>
@@ -166,7 +186,7 @@ if ($user_result->num_rows > 0) {
 
     <!-- addProductButton -->
     <form action="user_dashboard.php" method="GET">
-        <button type="submit" class="btn btn-success" style="margin-left: 30px; padding: 15px; border-radius: 20px; margin-bottom: 10px; width: 350px;">
+        <button type="submit" class="btn btn-success" style="margin-left: 30px; padding: 15px; border-radius: 20px; margin-bottom: 5px; width: 350px;">
             <i class="far fa-plus-square" id="addProductButton"> Add List </i>
         </button>
     </form>
