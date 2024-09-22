@@ -339,3 +339,13 @@ body {
 .form-label  {
 color: black;
 }
+
+.sort-options {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align items to the end (right side) */
+    margin-right: 10px;
+    border: none;
+
+}
+
