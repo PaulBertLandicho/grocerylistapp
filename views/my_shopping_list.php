@@ -150,7 +150,7 @@ if ($user_result->num_rows > 0) {
                                             <div class="product-actions">
 
                                                 <!-- Delete Icon -->
-                                                <form action='remove_addlist.php' method='post'>
+                                                <form action='remove_favorite.php' method='post'>
                                <input type='hidden' name='product_id' value='<?php echo htmlspecialchars($product['id']); ?>'>
                                   <button type="submit" class='button-white' style='border: none; background-color: transparent;'>
                                          <i class="fas fa-trash-alt" style="font-size: 17px; color: maroon; margin-right: 10px;"></i>
