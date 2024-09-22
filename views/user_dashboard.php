@@ -41,18 +41,18 @@ switch ($sort) {
       break;
 }
 
-// Updated SQL query with sorting
-$sql = "SELECT * FROM product WHERE Name LIKE ? OR Brand LIKE ? ORDER BY $orderBy LIMIT ?, ?";
+// Updated SQL query with sorting and store search
+$sql = "SELECT * FROM product WHERE Name LIKE ? OR Brand LIKE ? OR Store LIKE ? ORDER BY $orderBy LIMIT ?, ?";
 $stmt = $conn->prepare($sql);
 $searchTerm = "%$search%";
-$stmt->bind_param("ssii", $searchTerm, $searchTerm, $offset, $records_per_page);
+$stmt->bind_param("ssssi", $searchTerm, $searchTerm, $searchTerm, $offset, $records_per_page);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Total records query updated to search both name and brand
-$total_records_query = "SELECT COUNT(*) FROM product WHERE Name LIKE ? OR Brand LIKE ?";
+// Total records query updated to search name, brand, and store
+$total_records_query = "SELECT COUNT(*) FROM product WHERE Name LIKE ? OR Brand LIKE ? OR Store LIKE ?";
 $total_stmt = $conn->prepare($total_records_query);
-$total_stmt->bind_param("ss", $searchTerm, $searchTerm);
+$total_stmt->bind_param("sss", $searchTerm, $searchTerm, $searchTerm);
 $total_stmt->execute();
 $total_records = $total_stmt->get_result()->fetch_row()[0];
 
@@ -172,14 +172,14 @@ $conn->close();
         </form>
     </div>
     <center>
-        <div class="search-box" style="margin-left: 10px; width: 380px; ">
-            <form method="GET" action="" class="d-flex" id="search-form">
-                <div class="search-icon-container">
-                    <i class="fas fa-search"></i>
-                </div>
-                <input type="search" id="search-bar" name="search" class="form-control me-2" placeholder="Search for products..." aria-label="Search" value="<?php echo htmlspecialchars($search); ?>">
-            </form>
+    <div class="search-box" style="margin-left: 10px; width: 380px;">
+    <form method="GET" action="" class="d-flex" id="search-form">
+        <div class="search-icon-container">
+            <i class="fas fa-search"></i>
         </div>
+        <input type="search" id="search-bar" name="search" class="form-control me-2" placeholder="Search for products..." aria-label="Search" value="<?php echo htmlspecialchars($search); ?>">
+    </form>
+</div>
 
         </div>
         <h3 style="text-align: center;font-size: 20px; font-weight: bold; margin: 0 auto; display: block; margin-bottom: 10px;"> Recommended <span style="font-size: 15px; font-weight: normal; margin-left:200px;">All</span>
