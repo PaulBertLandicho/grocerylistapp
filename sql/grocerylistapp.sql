@@ -150,15 +150,15 @@ INSERT INTO `product` (`id`, `name`, `price`, `category_id`, `brand`, `image`, `
 (42, 'Naked Whey', 130.00, 2, 'protein', 'uploads/protein.jfif', '250ml', 1, 0, 'Robenson'),
 (44, 'Coke', 95.00, 4, 'Coca-cola', 'uploads/coke_1.25L_1200x.webp', '1.25 L', 1, 0, 'FK Mart'),
 (45, 'Bulad', 75.00, 5, 'Unknown', 'uploads/bulad.jfif', '1kg', 1, 0, 'Bularan-saray'),
-(46, 'Tamban', 100.00, 5, 'Unknown', 'uploads/tambans.jpg', '1kg', 1, 0, 'Supermarket'),
-(47, 'Pure Protein', 250.00, 2, 'Protein', 'uploads/ppr-000510-creamy-vanilla-all-in-one-powder-1.25-lb_1_25978c55-1e3e-4e68-9f4d-83112d997680.webp', '574g', 1, 0, 'Robenson'),
+(46, 'Tamban', 100.00, 5, 'Unknown', 'uploads/tamban.jpg', '1kg', 1, 0, 'Supermarket'),
+(47, 'Pure Protein', 250.00, 2, 'Protein', 'uploads/pure protein.webp', '574g', 1, 0, 'Robenson'),
 (48, 'Cheezy', 23.00, 3, 'leslie', 'uploads/Cheezy-Corn-Crunch-Snack-70g--500x500-product_popup_500x500.webp', '70g', 1, 0, 'FK Mart'),
 (50, 'Shakoy', 10.00, 6, 'Unknown', 'uploads/shakoy.jfif', '1kg', 1, 0, 'Madelicious '),
 (51, 'Donut', 45.00, 6, 'Unknown', 'uploads/donut.jfif', '28g ', 1, 0, 'Dunkin Donuts'),
-(53, 'Carrots', 30.00, 7, 'Unknown', 'uploads/download (7).jfif', '1kg', 1, 0, 'Supermarket'),
+(53, 'Carrots', 30.00, 7, 'Unknown', 'uploads/carrots.jfif', '1kg', 1, 0, 'Supermarket'),
 (54, 'Eggplant', 20.00, 7, 'Unknown', 'uploads/eggplant.png.jfif', '1kg', 1, 0, 'Supermarket'),
-(56, 'Watemelon', 80.00, 1, 'unkown', 'uploads/download (8).jfif', '1kg', 1, 0, 'Supermarket'),
-(57, 'Banana', 45.00, 1, 'Unknown', 'uploads/download.jfif', '1kg', 1, 0, 'Supermarket'),
+(56, 'Watemelon', 80.00, 1, 'unkown', 'uploads/watermelon.jfif', '1kg', 1, 0, 'Supermarket'),
+(57, 'Banana', 45.00, 1, 'Unknown', 'uploads/banana.jfif', '1kg', 1, 0, 'Supermarket'),
 (58, 'Biscuit', 12.00, 3, 'Rebisco', 'uploads/biscuit.jfif', '32g', 1, 0, 'FK Mart'),
 (59, 'Red Horse', 130.00, 4, 'San Miguel Pale Pilsen', 'uploads/redhorse.jfif', '500ml', 1, 0, 'FK Mart'),
 (62, 'Apple', 30.00, 1, 'Unknown', 'uploads/apple.jpg', '1kg', 1, 0, 'FK Mart');
@@ -184,8 +184,6 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `username`, `email`, `password`, `profile_picture`) VALUES
 (2, 'PaulBert', 'landicho@gmail', '$2y$10$BGK657gPH.8PiVACUqyUWeGDJ1z6c1vFlG5YupVP15tsMa6pbK1v.', 'profile_2.jpg'),
 (5, 'romarc', 'romarc@gmail.com', '$2y$10$A5y9cq8jS7vPWNlzO7tYUeQtd2tHtjL7ESxZkzX4W2o8O3.jll9qe', 'defaultprofile.jpg'),
-(6, 'harley', 'harley@gmail', '$2y$10$MYRDoJgfKRlzHa6IY6BT3eXWsda3brJb5.GFjwYidDJNLlSg1ahPa', 'defaultprofile.jpg');
-
 --
 -- Indexes for dumped tables
 --

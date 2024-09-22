@@ -143,7 +143,7 @@ $conn->close();
                                                 <div class="product-actions">
                                                     <!-- Edit Icon -->
                                                     <a href="adminupdate_product_form.php?Id=<?= htmlspecialchars($product['id']); ?>" class="update-btn">
-                                                        <i class="far fa-edit" style="font-size: 18px; margin-left: 95px;">
+                                                        <i class="far fa-edit" style="font-size: 18px; margin-left: 90px;">
                     </a></i>
                                                         <!-- Delete Icon -->
                                                         <a href="delete.php?Id=<?= htmlspecialchars($product['id']); ?>" class="delete-btn">

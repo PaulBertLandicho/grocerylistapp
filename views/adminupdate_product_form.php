@@ -29,6 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
     $price = $_POST['price'];
     $category_id = intval($_POST['category_id']); // Ensure this is an integer
+    $weight = $_POST['weight'];
     $brand = $_POST['brand'];
     $store = $_POST['store'];
     $available = isset($_POST['available']) ? 1 : 0; // Check if checkbox is checked
@@ -41,10 +42,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
 
         // Update product with the new image and Availability status
-        $sql = "UPDATE product SET name='$name', price='$price', category_id='$category_id', brand='$brand', store='$store', image='$target_file', available='$available' WHERE id=$product_id";
+        $sql = "UPDATE product SET name='$name', price='$price', category_id='$category_id', brand='$brand', weight='$weight', store='$store', image='$target_file', available='$available' WHERE id=$product_id";
     } else {
         // Update product without changing the image but update ready status
-        $sql = "UPDATE product SET name='$name', price='$price', category_id='$category_id', brand='$brand', store='$store', available='$available' WHERE id=$product_id";
+        $sql = "UPDATE product SET name='$name', price='$price', category_id='$category_id', brand='$brand', weight='$weight', store='$store', available='$available' WHERE id=$product_id";
     }
 
     if ($conn->query($sql) === TRUE) {
@@ -105,6 +106,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <?php endwhile; ?>
                     </select>
                 </div>
+
+                <div class="mb-3">
+                        <label for="weight" class="form-label">Weight/Volume:</label>
+                        <input type="text" id="weight" name="weight" class="form-control" value="<?php echo htmlspecialchars($product['weight']); ?>" required>
+                    </div>
 
                     <div class="mb-3">
                         <label for="brand" class="form-label">Product Brand:</label>

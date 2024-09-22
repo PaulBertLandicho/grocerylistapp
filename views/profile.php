@@ -45,7 +45,7 @@
                 <img id="avatarImage" src="uploads/<?php echo htmlspecialchars($users['profile_picture']); ?>" style="width: 199px; height: 190px; margin-left: 110px; border-radius: 50%;" />
             </div>
             <div class="container">
-                <p style="font-weight: bold; color: maroon; font-size: 25px; margin-left:115px; margin-top: 15px; text-items: center;">
+                <p style="font-weight: bold; font-size: 25px; margin-left:115px; margin-top: 15px; text-items: center;">
                     <?php echo htmlspecialchars($users['username']); ?>
                 </p>
             </div>
@@ -62,19 +62,19 @@
     <div class="box">
         <a href="user_dashboard.php" style="text-decoration: none; display: flex; align-items: center; font-weight: bold; margin-bottom:30px;">
             <span class="fas fa-store-alt" style="background-color: maroon; color: white; border-radius: 50%; padding: 13px;"></span>
-            <span style="color: black; margin-left: 15px;">Grocery Shop</span>
+            <span style="color: white; margin-left: 15px; text-shadow: 0 2px 10px rgba(0,0,0,2.1);">Grocery Shop</span>
         </a>
         <a href="addproductlist.php" style="text-decoration: none; display: flex; align-items: center; font-weight: bold; margin-bottom:30px;">
             <span class="fa fa-shopping-basket" style="background-color: maroon; color: white; border-radius: 50%; padding: 13px;"></span>
-            <span style="color: black; margin-left: 15px;">Add Product</span>
+            <span style="color: white; margin-left: 15px; text-shadow: 0 2px 10px rgba(0,0,0,2.1);">Add Product</span>
         </a>
         <a href="my_shopping_list.php" style="text-decoration: none; display: flex; align-items: center; font-weight: bold; margin-bottom:30px;">
             <span class="fas fa-list-alt" style="background-color: maroon; color: white; border-radius: 50%; padding: 15px;"></span>
-            <span style="color: black; margin-left: 15px;">My Shopping List</span>
+            <span style="color: white; margin-left: 15px; text-shadow: 0 2px 10px rgba(0,0,0,2.1);">My Shopping List</span>
         </a>
         <a href="javascript:void(0);" class="logout-link" onclick="document.getElementById('logout-form').submit();" title="Logout" style="text-decoration: none; display: flex; align-items: center;">
             <span class="fa fa-sign-out" style="background-color: maroon; color: white;  border-radius: 50%; padding: 15px;"></span>
-            <span style="color: black; margin-left: 15px; font-weight: bold;">Logout</span>
+            <span style="color: white; margin-left: 15px; font-weight: bold; text-shadow: 0 2px 10px rgba(0,0,0,2.1);">Logout</span>
         </a>
         <form id="logout-form" action="logout.php" method="POST" style="display: none;">
             <!-- Form is hidden but used to perform POST request -->
@@ -112,7 +112,7 @@
                                 </a>
 
 
-                                <a href="#profile" title="Profile">
+                                <a href="profile.php" title="Profile">
                                     <i class="fas fa-user" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Profile</span></i>
                                 </a>
                                 <a href="javascript:void(0);" class="logout-link" onclick="document.getElementById('logout-form').submit();" title="Logout">
