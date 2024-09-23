@@ -14,17 +14,17 @@ $search_query = $conn->real_escape_string($search_query);
 $sort_by = isset($_GET['sort']) ? $_GET['sort'] : 'name'; // default to sorting by name
 $sort_order = isset($_GET['order']) ? $_GET['order'] : 'ASC'; // default to ascending order
 
-// Construct the SQL query with a search filter and sorting
+// Construct the SQL query with a search filter and sorting to include product brand
 $sql = "SELECT p.* 
         FROM my_addlist f 
         INNER JOIN product p ON f.product_id = p.id 
-        WHERE f.user_id = $user_id AND p.name LIKE '%$search_query%'
+        WHERE f.user_id = $user_id 
+        AND (p.name LIKE '%$search_query%' OR p.brand LIKE '%$search_query%' OR p.store LIKE '%$search_query%')
         ORDER BY 
             CASE 
                 WHEN '$sort_by' = 'name' THEN p.name
                 WHEN '$sort_by' = 'price' THEN p.price
             END $sort_order";
-
 
 $result = $conn->query($sql);
 

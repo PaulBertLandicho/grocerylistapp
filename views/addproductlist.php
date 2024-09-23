@@ -24,18 +24,18 @@ $offset = ($page - 1) * $records_per_page;
 // Search functionality
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Updated SQL query to search both name and brand
-$sql = "SELECT * FROM product WHERE Name LIKE ? OR Brand LIKE ? LIMIT ?, ?";
+// Updated SQL query with sorting and store search
+$sql = "SELECT * FROM product WHERE Name LIKE ? OR Brand LIKE ? OR Store LIKE ? LIMIT ?, ?";
 $stmt = $conn->prepare($sql);
 $searchTerm = "%$search%";
-$stmt->bind_param("ssii", $searchTerm, $searchTerm, $offset, $records_per_page);
+$stmt->bind_param("ssssi", $searchTerm, $searchTerm, $searchTerm, $offset, $records_per_page);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Total records query updated to search both name and brand
-$total_records_query = "SELECT COUNT(*) FROM product WHERE Name LIKE ? OR Brand LIKE ?";
+// Total records query updated to search name, brand, and store
+$total_records_query = "SELECT COUNT(*) FROM product WHERE Name LIKE ? OR Brand LIKE ? OR Store LIKE ?";
 $total_stmt = $conn->prepare($total_records_query);
-$total_stmt->bind_param("ss", $searchTerm, $searchTerm);
+$total_stmt->bind_param("sss", $searchTerm, $searchTerm, $searchTerm);
 $total_stmt->execute();
 $total_records = $total_stmt->get_result()->fetch_row()[0];
 
