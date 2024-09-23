@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 19, 2024 at 07:26 PM
+-- Generation Time: Sep 23, 2024 at 09:12 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -35,17 +35,6 @@ CREATE TABLE `cart` (
   `order_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `cart`
---
-
-INSERT INTO `cart` (`cart_id`, `user_id`, `product_id`, `quantity`, `order_date`) VALUES
-(8, NULL, NULL, 1, '2024-09-07 07:10:10'),
-(156, NULL, NULL, 2, '2024-09-17 03:38:43'),
-(186, 5, 27, 1, '2024-09-17 10:18:41'),
-(187, 5, 28, 1, '2024-09-17 10:18:44'),
-(223, 2, 62, 1, '2024-09-19 17:12:05');
-
 -- --------------------------------------------------------
 
 --
@@ -74,39 +63,15 @@ INSERT INTO `category` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `favorites`
+-- Table structure for table `my_addlist`
 --
 
-CREATE TABLE `favorites` (
+CREATE TABLE `my_addlist` (
   `id` int(11) NOT NULL,
   `user_id` varchar(50) NOT NULL,
   `product_id` varchar(50) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `favorites`
---
-
-INSERT INTO `favorites` (`id`, `user_id`, `product_id`, `created_at`) VALUES
-(5, '0', '38', '2024-09-09 00:08:54'),
-(6, '0', '41', '2024-09-09 04:45:56'),
-(7, '0', '39', '2024-09-09 06:24:04'),
-(8, '0', '40', '2024-09-09 08:24:03'),
-(9, '4', '42', '2024-09-09 16:44:02'),
-(47, '2', '4', '2024-09-13 09:14:43'),
-(54, '2', '14', '2024-09-16 05:12:23'),
-(55, '2', '15', '2024-09-17 07:01:46'),
-(109, '5', '21', '2024-09-17 10:16:24'),
-(110, '5', '24', '2024-09-17 10:16:26'),
-(112, '5', '28', '2024-09-17 10:18:05'),
-(114, '5', '18', '2024-09-17 10:32:27'),
-(141, '2', '29', '2024-09-18 16:28:11'),
-(142, '2', '33', '2024-09-18 16:28:16'),
-(143, '2', '34', '2024-09-18 17:45:23'),
-(144, '2', '29', '2024-09-18 17:45:25'),
-(145, '2', '33', '2024-09-18 17:45:26'),
-(164, '2', '57', '2024-09-19 17:11:52');
 
 -- --------------------------------------------------------
 
@@ -146,22 +111,22 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`id`, `name`, `price`, `category_id`, `brand`, `image`, `weight`, `available`, `purchased`, `store`) VALUES
-(40, 'Mineral Water', 25.00, 4, 'Absolute', 'uploads/water.jfif', '350ml', 1, 0, 'FK Mart'),
-(42, 'Naked Whey', 130.00, 2, 'protein', 'uploads/protein.jfif', '250ml', 1, 0, 'Robenson'),
+(40, 'Mineral Water', 25.00, 4, 'Absolute', 'uploads/water.jpg\r\n', '350ml', 1, 0, 'FK Mart'),
+(42, 'Naked Whey', 130.00, 2, 'protein', 'uploads/protein.jpg', '250ml', 1, 0, 'Robenson'),
 (44, 'Coke', 95.00, 4, 'Coca-cola', 'uploads/coke_1.25L_1200x.webp', '1.25 L', 1, 0, 'FK Mart'),
-(45, 'Bulad', 75.00, 5, 'Unknown', 'uploads/bulad.jfif', '1kg', 1, 0, 'Bularan-saray'),
-(46, 'Tamban', 100.00, 5, 'Unknown', 'uploads/tamban.jpg', '1kg', 1, 0, 'Supermarket'),
+(45, 'Bulad', 75.00, 5, 'Unknown', 'uploads/bulad.jpg', '1kg', 1, 0, 'Bularan-saray'),
+(46, 'Tamban', 100.00, 5, 'Unknown', 'uploads/tambans.jpg', '1kg', 1, 0, 'Supermarket'),
 (47, 'Pure Protein', 250.00, 2, 'Protein', 'uploads/pure protein.webp', '574g', 1, 0, 'Robenson'),
-(48, 'Cheezy', 23.00, 3, 'leslie', 'uploads/Cheezy-Corn-Crunch-Snack-70g--500x500-product_popup_500x500.webp', '70g', 1, 0, 'FK Mart'),
-(50, 'Shakoy', 10.00, 6, 'Unknown', 'uploads/shakoy.jfif', '1kg', 1, 0, 'Madelicious '),
-(51, 'Donut', 45.00, 6, 'Unknown', 'uploads/donut.jfif', '28g ', 1, 0, 'Dunkin Donuts'),
-(53, 'Carrots', 30.00, 7, 'Unknown', 'uploads/carrots.jfif', '1kg', 1, 0, 'Supermarket'),
-(54, 'Eggplant', 20.00, 7, 'Unknown', 'uploads/eggplant.png.jfif', '1kg', 1, 0, 'Supermarket'),
-(56, 'Watemelon', 80.00, 1, 'unkown', 'uploads/watermelon.jfif', '1kg', 1, 0, 'Supermarket'),
-(57, 'Banana', 45.00, 1, 'Unknown', 'uploads/banana.jfif', '1kg', 1, 0, 'Supermarket'),
-(58, 'Biscuit', 12.00, 3, 'Rebisco', 'uploads/biscuit.jfif', '32g', 1, 0, 'FK Mart'),
-(59, 'Red Horse', 130.00, 4, 'San Miguel Pale Pilsen', 'uploads/redhorse.jfif', '500ml', 1, 0, 'FK Mart'),
-(62, 'Apple', 30.00, 1, 'Unknown', 'uploads/apple.jpg', '1kg', 1, 0, 'FK Mart');
+(48, 'Snack', 23.00, 3, 'leslie', 'uploads/snack.jpg', '70g', 1, 0, 'FK Mart'),
+(50, 'Shakoy', 10.00, 6, 'Unknown', 'uploads/shakoy.jpg', '1kg', 1, 0, 'Madelicious '),
+(51, 'Donut', 45.00, 6, 'Unknown', 'uploads/donut.jpg', '28g ', 1, 0, 'Dunkin Donuts'),
+(54, 'Eggplant', 20.00, 7, 'Unknown', 'uploads/eggplant.jpg', '1kg', 1, 0, 'Supermarket'),
+(56, 'Watemelon', 80.00, 1, 'unkown', 'uploads/watermelon.jpg', '1kg', 1, 0, 'Supermarket'),
+(59, 'Sting', 15.00, 4, 'PepsiCo', 'uploads/sting.jpg', '500ml', 1, 0, 'FK Mart'),
+(63, 'Carrot', 30.00, 6, 'Unknown', 'uploads/carrots.jpg', '1kg', 1, 0, 'Supermarket'),
+(64, 'Banana', 45.00, 1, 'Unknown', 'uploads/banana.jpg', '1kg', 1, 0, 'Supermarket'),
+(65, 'Apple', 30.00, 1, 'Unknown', 'uploads/apple.jpg', '1kg', 1, 0, 'Supermaket'),
+(66, 'Biscuit', 12.00, 3, 'Rebisco', 'uploads/biscuit.jpg', '32g', 1, 0, 'FK Mart');
 
 -- --------------------------------------------------------
 
@@ -182,8 +147,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `email`, `password`, `profile_picture`) VALUES
-(2, 'PaulBert', 'landicho@gmail', '$2y$10$BGK657gPH.8PiVACUqyUWeGDJ1z6c1vFlG5YupVP15tsMa6pbK1v.', 'profile_2.jpg'),
-(5, 'romarc', 'romarc@gmail.com', '$2y$10$A5y9cq8jS7vPWNlzO7tYUeQtd2tHtjL7ESxZkzX4W2o8O3.jll9qe', 'defaultprofile.jpg'),
+(2, 'PaulBert', 'landicho@gmail', '$2y$10$BGK657gPH.8PiVACUqyUWeGDJ1z6c1vFlG5YupVP15tsMa6pbK1v.', 'profile_2.jpg');
+
 --
 -- Indexes for dumped tables
 --
@@ -201,9 +166,9 @@ ALTER TABLE `category`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `favorites`
+-- Indexes for table `my_addlist`
 --
-ALTER TABLE `favorites`
+ALTER TABLE `my_addlist`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -235,25 +200,25 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=224;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=234;
 
 --
--- AUTO_INCREMENT for table `favorites`
+-- AUTO_INCREMENT for table `my_addlist`
 --
-ALTER TABLE `favorites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
+ALTER TABLE `my_addlist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=215;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `user`

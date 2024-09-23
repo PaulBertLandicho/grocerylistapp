@@ -17,7 +17,7 @@ if (isset($_POST['product_id'])) {
     $product_id = mysqli_real_escape_string($conn, $_POST['product_id']);
     
     // Query to delete the favorite product for the user
-    $delete_sql = "DELETE FROM favorites WHERE user_id = $user_id AND product_id = $product_id";
+    $delete_sql = "DELETE FROM my_addlist WHERE user_id = $user_id AND product_id = $product_id";
     
     // Execute the query
     if ($conn->query($delete_sql)) {

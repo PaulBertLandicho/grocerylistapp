@@ -26,7 +26,6 @@ body {
   
   .search-box {
     position: relative; 
-    width: 380px; 
     margin-left: 10px;
     margin-bottom: 20px;
 }
@@ -66,9 +65,10 @@ body {
       margin: auto;
   }
   .products-list-container{
-      height: 500px;
+      height: 553px;
       margin-bottom: 2px;
       overflow-y: auto;
+      margin-top: 20px;
   }
   
   .product-container {
@@ -477,3 +477,32 @@ body {
         .settings-option label {
           margin-right: 10px;
         }
+
+    .navbar {
+      width: auto;
+      height: 70px;
+    }
+
+    .navbar h1 {
+      color: darkgreen;
+      font-weight: bold;
+      font-size: 35px;
+      margin-left: 10px;
+    }
+
+    .navbar .fa {
+      color: darkgreen;
+      margin-right: 15px;
+      transition: transform 0.3s ease;
+    }
+
+   .menu-content .fas {
+    color: darkgreen;
+    font-size: 20px;
+   }
+
+   .sort-box {
+    margin-left: 210px;
+    margin-bottom: 5px;
+   }
+   

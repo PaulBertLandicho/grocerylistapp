@@ -16,7 +16,7 @@ $sort_order = isset($_GET['order']) ? $_GET['order'] : 'ASC'; // default to asce
 
 // Construct the SQL query with a search filter and sorting
 $sql = "SELECT p.* 
-        FROM favorites f 
+        FROM my_addlist f 
         INNER JOIN product p ON f.product_id = p.id 
         WHERE f.user_id = $user_id AND p.name LIKE '%$search_query%'
         ORDER BY 

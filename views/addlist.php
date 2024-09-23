@@ -19,8 +19,8 @@ if (!$product_id) {
 // Get user ID
 $user_id = $_SESSION['user_id'];
 
-// Insert the product into the favorites table
-$insert_sql = "INSERT INTO favorites (user_id, product_id) VALUES ($user_id, $product_id)";
+// Insert the product into the my_addlist table
+$insert_sql = "INSERT INTO my_addlist (user_id, product_id) VALUES ($user_id, $product_id)";
 if ($conn->query($insert_sql)) {
 
     // Redirect to my_shopping_list.php

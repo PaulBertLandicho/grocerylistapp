@@ -27,25 +27,32 @@ $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : 
 // Specify the category_id you want to search within
 $category_id = 3; // You can dynamically set this based on user choice or another parameter
 
-// Query with pagination and search, including brand
+$search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+$searchTerm = "%$search%"; // Search term for LIKE query
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page
+$records_per_page = 10; // Records per page
+$offset = ($page - 1) * $records_per_page; // Offset for pagination
+
+// Query to retrieve products
 $sql = "SELECT * FROM product 
         WHERE category_id = ? 
-        AND (name LIKE ? OR brand LIKE ?) 
+        AND (name LIKE ? OR brand LIKE ? OR store LIKE ?) 
         LIMIT ?, ?";
 $stmt = $conn->prepare($sql);
-$searchTerm = "%$search%";
-$stmt->bind_param("issii", $category_id, $searchTerm, $searchTerm, $offset, $records_per_page);
+$stmt->bind_param("isssii", $category_id, $searchTerm, $searchTerm, $searchTerm, $offset, $records_per_page); // Corrected 'isssii'
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Total records query with search for both name and brand
-$total_records_query = "SELECT COUNT(*) FROM product WHERE category_id = ? AND (name LIKE ? OR brand LIKE ?)";
+// Query to count total records
+$total_records_query = "SELECT COUNT(*) FROM product 
+                        WHERE category_id = ? 
+                        AND (name LIKE ? OR brand LIKE ? OR store LIKE ?)";
 $total_stmt = $conn->prepare($total_records_query);
-$total_stmt->bind_param("iss", $category_id, $searchTerm, $searchTerm);
+$total_stmt->bind_param("isss", $category_id, $searchTerm, $searchTerm, $searchTerm); // Corrected 'isss'
 $total_stmt->execute();
 $total_records = $total_stmt->get_result()->fetch_row()[0];
 
-// Total pages
+// Calculate total pages
 $total_pages = ceil($total_records / $records_per_page);
 
 // Close statements
@@ -69,24 +76,24 @@ $conn->close();
 </head>
 
 <body>
-    <header class="navbar" style="width: auto; height: 70px;" data-bs-theme="dark">
-        <h1 style="color: darkgreen; font-weight: bold; font-size: 35px; margin-left: 10px;">Snack Shop</h1>
+    <header class="navbar" data-bs-theme="dark">
+        <h1>Snack Shop</h1>
         <button class="menu-button">
-            <i class="fa fa-align-justify" style="color: darkgreen; margin-right: 15px; transition: transform 0.3s ease;"></i>
+            <i class="fa fa-align-justify"></i>
         </button>
 
         <!-- Menu content with icons -->
         <div class="menu-content">
             <a href="javascript:void(0);" id="settings-link" title="Settings">
-                <i class="fas fa-cog" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Settings</span></i>
+                <i class="fas fa-cog"><span style="margin-left: 10px;">Settings</span></i>
             </a>
 
 
             <a href="profile.php" title="Profile">
-                <i class="fas fa-user" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Profile</span></i>
+                <i class="fas fa-user"><span style="margin-left: 10px;">Profile</span></i>
             </a>
             <a href="javascript:void(0);" class="logout-link" onclick="document.getElementById('logout-form').submit();" title="Logout">
-                <i class="fas fa-sign-out-alt" style="font-size: 20px; color: darkgreen;"><span style="margin-left: 10px;">Logout</span></i>
+                <i class="fas fa-sign-out-alt"><span style="margin-left: 10px;">Logout</span></i>
             </a>
             <form id="logout-form" action="logout.php" method="POST" style="display: none;">
                 <!-- Form is hidden but used to perform POST request -->
@@ -147,7 +154,7 @@ $conn->close();
     </div>
     <br>
     <center>
-        <div class="search-box" style="margin-left: 10px; width: 380px;">
+        <div class="search-box" style="width: 380px;">
             <form method="GET" action="" class="d-flex" id="search-form">
                 <div class="search-icon-container">
                     <i class="fas fa-search"></i>
@@ -156,7 +163,7 @@ $conn->close();
             </form>
         </div>
         </div>
-        <div class="products-list-container" style="height: 553px; margin-top: 20px;">
+        <div class="products-list-container">
             <div id="product-list">
                 <?php
         $foundProduct = false; 

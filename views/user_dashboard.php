@@ -82,24 +82,24 @@ $conn->close();
 </head>
 
 <body>
-    <header class="navbar" style="width: auto; height: 70px;" data-bs-theme="dark">
-        <h1 style="color: darkgreen; font-weight: bold; font-size: 35px; margin-left: 10px;">Grocery Shop</h1>
+    <header class="navbar" data-bs-theme="dark">
+        <h1>Grocery Shop</h1>
         <button class="menu-button">
-            <i class="fa fa-align-justify" style="color: darkgreen; margin-right: 15px; transition: transform 0.3s ease;"></i>
+            <i class="fa fa-align-justify"></i>
         </button>
 
         <!-- Menu content with icons -->
         <div class="menu-content">
             <a href="javascript:void(0);" id="settings-link" title="Settings">
-                <i class="fas fa-cog" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Settings</span></i>
+                <i class="fas fa-cog"><span style="margin-left: 10px;">Settings</span></i>
             </a>
 
 
             <a href="profile.php" title="Profile">
-                <i class="fas fa-user" style="color: darkgreen; font-size: 20px;"><span style="margin-left: 10px;">Profile</span></i>
+                <i class="fas fa-user"><span style="margin-left: 10px;">Profile</span></i>
             </a>
             <a href="javascript:void(0);" class="logout-link" onclick="document.getElementById('logout-form').submit();" title="Logout">
-                <i class="fas fa-sign-out-alt" style="font-size: 20px; color: darkgreen;"><span style="margin-left: 10px;">Logout</span></i>
+                <i class="fas fa-sign-out-alt"><span style="margin-left: 10px;">Logout</span></i>
             </a>
             <form id="logout-form" action="logout.php" method="POST" style="display: none;">
                 <!-- Form is hidden but used to perform POST request -->
@@ -159,7 +159,7 @@ $conn->close();
             </div>
         </div>
     </div>
-    <div class="sort-box" style="margin-left: 210px; margin-bottom: 5px;">
+    <div class="sort-box">
         <form method="GET" action="" class="d-flex">
             <div class="form-group me-2">
                 <select name="sort" class="form-control" onchange="this.form.submit();">
@@ -172,7 +172,7 @@ $conn->close();
         </form>
     </div>
     <center>
-    <div class="search-box" style="margin-left: 10px; width: 380px;">
+    <div class="search-box" style="width: 380px;">
     <form method="GET" action="" class="d-flex" id="search-form">
         <div class="search-icon-container">
             <i class="fas fa-search"></i>
@@ -182,9 +182,9 @@ $conn->close();
 </div>
 
         </div>
-        <h3 style="text-align: center;font-size: 20px; font-weight: bold; margin: 0 auto; display: block; margin-bottom: 10px;"> Recommended <span style="font-size: 15px; font-weight: normal; margin-left:200px;">All</span>
+        <h3 style="text-align: center; font-size: 20px; font-weight: bold; margin: 0 auto; display: block;"> Recommended <span style="font-size: 15px; font-weight: normal; margin-left: 200px;">All</span>
       </h3>
-        <div class="products-list-container">
+        <div class="products-list-container" style="height: 490px;">
             <div id="product-list">
                 <?php
         $foundProduct = false; 
