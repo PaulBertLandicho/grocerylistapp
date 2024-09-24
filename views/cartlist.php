@@ -53,43 +53,8 @@ $result = $conn->query($sql);
 
 // Initialize total price variable
 $total_price = 0;
-
-// Handle Place Order action
-if(isset($_GET['place_order'])) {
-    // Retrieve cart items for the user
-    $cart_sql = "SELECT * FROM cart WHERE user_id = $user_id";
-    $cart_result = $conn->query($cart_sql);
-
-    // Insert cart items into order table
-    $order_successful = true; // Flag to check if order insertion was successful
-    while ($cart_row = $cart_result->fetch_assoc()) {
-        $product_id = $cart_row['product_id'];
-        $quantity = $cart_row['quantity'];
-        $insert_order_sql = "INSERT INTO orders (user_id, product_id, quantity) VALUES ($user_id, $product_id, $quantity)";
-        if (!$conn->query($insert_order_sql)) {
-            $order_successful = false; // Set the flag to false if any insertion fails
-            break; // Stop processing if there's an error
-        }
-    }
-
-    // Clear the cart only if the order was successful
-    if ($order_successful) {
-        $clear_cart_sql = "DELETE FROM cart WHERE user_id = $user_id";
-        $conn->query($clear_cart_sql);
-        
-        // Echo out the JavaScript alert and redirect to cartlist.php
-        echo "<script>
-                alert('Successfully checked out.');
-                window.location.href='cartlist.php';
-              </script>";
-        exit();
-    } else {
-        // Handle the error accordingly
-        echo "Error placing order: " . $conn->error;
-    }
-}
-
 ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -130,81 +95,74 @@ if(isset($_GET['place_order'])) {
         </div>
     </header>
 
-    <div class="scrollable-container" style="height: 648px;">
-        <div class="products-list-container">
-            <?php
-    // Check if products are found in the cart
-    if ($result->num_rows > 0) {
-        // Display the products
-        while ($row = $result->fetch_assoc()) {
-            $productId = $row['id'];
+    <div class="scrollable-container" style="height: 670px;">
+    <div class="products-list-container">
+        <?php
+        // Check if products are found in the cart
+        if ($result->num_rows > 0) {
+            // Initialize total price
+            $total_price = 0;
+
+            // Display the products
+            while ($row = $result->fetch_assoc()) {
+                $productId = $row['id'];
                 $quantity = $row['quantity'];
                 $price = $row['price'];
-        
+
                 // Ensure the new quantity is at least 1
                 $decreasedQuantity = max($quantity - 1, 1);
                 $increasedQuantity = $quantity + 1;
-            echo '<div class="product-container">';
-            echo '<div class="product-image">';
-            echo '<img src="' . $row['image'] . '" alt="Product Image" style="width: 150px; height: 100px; border-radius: 15px;"><br>';
-            echo '</div>';
-            echo '<div class="product-details">';
-            echo '<span class="product-name" style="font-size: 20px; font-weight: bold; color: maroon">' . $row['name'] . '</span><br>';
-            echo '<span class="product-total-price" style="font-size:20px; color: black;">₱' . $row['price'] . '</span>';
-                        // Create a form for updating quantity
-                        echo '<div class="quantity" style="margin-left: 55px;">';
-                        echo '<form action="' . $_SERVER['PHP_SELF'] . '" method="GET">';
-                        echo '<input type="hidden" name="update_quantity_id" value="' . $row['id'] . '">';
-                        echo '<button type="submit" name="new_quantity" value="' . $decreasedQuantity . '" style="background-color: maroon; border:none; margin-right: 15px;" ' . ($quantity <= 1 ? 'disabled' : '') . '><i class="fas fa-minus" style="color: white;"></i></button>';
-                        echo '<span class="product-quantity" style="font-size: 20px; border: none; background-color: white; padding: 2px; border-radius: 4px; color: black;">' . htmlspecialchars($row['quantity']) . 'kg</span>';
-                        echo '<button type="submit" name="new_quantity" value="' . $increasedQuantity . '" " style="background-color: maroon; border:none; margin-left: 15px;"><i class="fas fa-plus" style="color: white;"></i></button>';
-                    echo '</form>';
-                        // Calculate and display the total price for this product
-                        $product_price = $row['price'] * $row['quantity'];
-                        $total_price += $product_price; // Add to total price
-                        echo '<span class="product-total-price" style="font-size: 15px; color: black; font-weight: bold;">Total Price: ₱' . $product_price . '</span><br>';
-                        // Add delete button with link to delete the product
-                        echo '<a href="' . $_SERVER['PHP_SELF'] . '?delete_product_id=' . $row['id'] . '"><i class="fas fa-trash" style="margin-left:100px; color: maroon; font-size:15px;"></i></a>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '</div>';
 
-                    }
-                } else {
-                    // If the cart is empty, display a message to the user
-                    
-                    echo '<div class="no-product-found">
-                    <image src="uploads/emptybag.png" style="margin-top: 40px; margin-left: 100px;">
-                    <h3 style="color: maroon; opacity: 0.7; margin-top: 5em;  text-align: center;">List is Empty.</h3>
-                </div>';
-                }
-                ?>
-        </div>
-    </div>
-    <div class="total payment">
-        <center>
-            <?php
-    // Check if products are found in the cart
-    if ($result->num_rows > 0) {
-        // Display the products
-        while ($row = $result->fetch_assoc()) { 
-          // Calculate and display the total price for this product
-$product_price = $row['price'] * $row['quantity'];
-$total_price += $product_price; // Add to total price
+                echo '<div class="product-container">';
+                echo '<div class="product-image">';
+                echo '<img src="' . $row['image'] . '" alt="Product Image" style="width: 150px; height: 100px; border-radius: 15px;"><br>';
+                echo '</div>';
+                echo '<div class="product-details">';
+                echo '<span class="product-name" style="font-size: 20px; font-weight: bold; color: maroon">' . $row['name'] . '</span><br>';
+                echo '<span class="product-total-price" style="font-size:20px; color: black;">₱' . $row['price'] . '</span>';
+
+                // Create a form for updating quantity
+                echo '<div class="quantity" style="margin-left: 55px;">';
+                echo '<form action="' . $_SERVER['PHP_SELF'] . '" method="GET">';
+                echo '<input type="hidden" name="update_quantity_id" value="' . $row['id'] . '">';
+                echo '<button type="submit" name="new_quantity" value="' . $decreasedQuantity . '" style="background-color: maroon; border:none; margin-right: 15px;" ' . ($quantity <= 1 ? 'disabled' : '') . '><i class="fas fa-minus" style="color: white;"></i></button>';
+                echo '<span class="product-quantity" style="font-size: 20px; border: none; background-color: white; padding: 2px; border-radius: 4px; color: black;">' . htmlspecialchars($row['quantity']) . 'kg</span>';
+                echo '<button type="submit" name="new_quantity" value="' . $increasedQuantity . '" style="background-color: maroon; border:none; margin-left: 15px;"><i class="fas fa-plus" style="color: white;"></i></button>';
+                echo '</form>';
+
+                // Calculate and display the total price for this product
+                $product_price = $row['price'] * $row['quantity'];
+                $total_price += $product_price; // Add to total price
+                echo '<span class="product-total-price" style="font-size: 15px; color: black; font-weight: bold;">Total Price: ₱' . $product_price . '</span><br>';
+                
+                // Add delete button with link to delete the product
+                echo '<a href="' . $_SERVER['PHP_SELF'] . '?delete_product_id=' . $row['id'] . '"><i class="fas fa-trash" style="margin-left:100px; color: maroon; font-size:15px;"></i></a>';
+                echo '</div>'; // Close product-details
+                echo '</div>'; // Close product-container
+                echo '</div>'; // Close product-container
+
+            }
+
+            // Display total price
+            echo '<div class="total payment" style="position: absolute; bottom: 0;  margin-bottom: 70px; left: 0; right: 0;  display: flex; align-items: center; justify-content: center;">';
+            echo '<a id="checkout-btn" class="btn btn-primary" style="margin-bottom: 25px;background-color: maroon; width: 350px; color: white; border-color:maroon; border-radius:30px; height: 45px; font-size:20px; align-items: center;" role="button">';
+            echo '<h1>Checkout <span style="margin-left: 110px;">  ₱' . $total_price . '</span></h1>';
+            echo '</a></div>'; // Close total payment
+
+        } else {
+            // If the cart is empty, display a message to the user
+            echo '<div class="no-product-found">
+                <img src="uploads/emptybag.png" style="margin-top: 40px; margin-left: 100px;">
+                <h3 style="color: maroon; opacity: 0.7; margin-top: 5em; text-align: center;">List is Empty.</h3>
+            </div>';
         }
-    }
-// Display total price
-echo '<a class="btn btn-primary" href="?place_order=true" style="margin-bottom: 25px;background-color: maroon; width: 350px;  color: white; border-color:maroon; border-radius:30px; height: 45px; font-size:20px; align-items: center;" role="button">
-<h1>Checkout  <span style="margin-left: 110px;">  ₱' . $total_price . '</span></h1>
- </a></div>';
-
- 
-    ?>
+        ?>
     </div>
+</div>
 
-    </center>
 
-    <div class="icon-bar">
+
+    <div class="icon-bar" style="margin-top: 68px;">
         <a class="active" href="user_dashboard.php">
             <i class="fas fa-store-alt"><br>
 <span style="font-size: 16px;">Shop</span>
@@ -241,7 +199,10 @@ echo '<a class="btn btn-primary" href="?place_order=true" style="margin-bottom: 
 
     <script src="js/settingsdarkmode.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+   <script src="js/checkoutalert.js"></script>
 
 </body>
 
-</html>
+</html> 

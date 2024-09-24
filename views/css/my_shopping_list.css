@@ -125,7 +125,7 @@ justify-content: flex-end; /* Align items to the right side */
     color: #00ff99; /* Neon color effect */
 }
   .scrollable-container{
-    height: 719px;
+    height: 740px;
     margin-bottom:20px; 
     overflow-y: auto;
   }
