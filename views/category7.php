@@ -23,32 +23,29 @@ $offset = ($page - 1) * $records_per_page;
 
 // Search functionality
 $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
-
-// Specify the category_id you want to search within
-$category_id = 7; // You can dynamically set this based on user choice or another parameter
-
-$search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 $searchTerm = "%$search%"; // Search term for LIKE query
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page
-$records_per_page = 10; // Records per page
-$offset = ($page - 1) * $records_per_page; // Offset for pagination
 
-// Query to retrieve products
+// Define the category ID dynamically, if needed
+$category_id = isset($_GET['category_id']) ? (int)$_GET['category_id'] : 7; // Default category_id
+
+// Query to retrieve products added by the logged-in user
 $sql = "SELECT * FROM product 
         WHERE category_id = ? 
+        AND user_id = ? 
         AND (name LIKE ? OR brand LIKE ? OR store LIKE ?) 
         LIMIT ?, ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("isssii", $category_id, $searchTerm, $searchTerm, $searchTerm, $offset, $records_per_page); // Corrected 'isssii'
+$stmt->bind_param("iisssii", $category_id, $user_id, $searchTerm, $searchTerm, $searchTerm, $offset, $records_per_page);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Query to count total records
+// Query to count total records for pagination
 $total_records_query = "SELECT COUNT(*) FROM product 
                         WHERE category_id = ? 
+                        AND user_id = ? 
                         AND (name LIKE ? OR brand LIKE ? OR store LIKE ?)";
 $total_stmt = $conn->prepare($total_records_query);
-$total_stmt->bind_param("isss", $category_id, $searchTerm, $searchTerm, $searchTerm); // Corrected 'isss'
+$total_stmt->bind_param("iisss", $category_id, $user_id, $searchTerm, $searchTerm, $searchTerm);
 $total_stmt->execute();
 $total_records = $total_stmt->get_result()->fetch_row()[0];
 
@@ -60,6 +57,7 @@ $stmt->close();
 $total_stmt->close();
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html>

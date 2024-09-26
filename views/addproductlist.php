@@ -10,11 +10,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$sql = "SELECT * FROM user WHERE id=?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$users = $stmt->get_result()->fetch_assoc();
 
 // Pagination
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -24,18 +19,18 @@ $offset = ($page - 1) * $records_per_page;
 // Search functionality
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Updated SQL query with sorting and store search
-$sql = "SELECT * FROM product WHERE Name LIKE ? OR Brand LIKE ? OR Store LIKE ? LIMIT ?, ?";
+// Updated SQL query with sorting, store search, and user filter
+$sql = "SELECT * FROM Product WHERE user_id = ? AND (Name LIKE ? OR Brand LIKE ? OR Store LIKE ?) LIMIT ?, ?";
 $stmt = $conn->prepare($sql);
 $searchTerm = "%$search%";
-$stmt->bind_param("ssssi", $searchTerm, $searchTerm, $searchTerm, $offset, $records_per_page);
+$stmt->bind_param("isssii", $user_id, $searchTerm, $searchTerm, $searchTerm, $offset, $records_per_page);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Total records query updated to search name, brand, and store
-$total_records_query = "SELECT COUNT(*) FROM product WHERE Name LIKE ? OR Brand LIKE ? OR Store LIKE ?";
+// Total records query updated to include user filter
+$total_records_query = "SELECT COUNT(*) FROM Product WHERE user_id = ? AND (Name LIKE ? OR Brand LIKE ? OR Store LIKE ?)";
 $total_stmt = $conn->prepare($total_records_query);
-$total_stmt->bind_param("sss", $searchTerm, $searchTerm, $searchTerm);
+$total_stmt->bind_param("isss", $user_id, $searchTerm, $searchTerm, $searchTerm);
 $total_stmt->execute();
 $total_records = $total_stmt->get_result()->fetch_row()[0];
 
@@ -64,6 +59,8 @@ $conn->close();
 </head>
 
 <body>
+
+    <!-- Header Navbar  -->
     <header class="navbar" style="width: auto;;" data-bs-theme="dark">
         <h1 style="font-weight: bold; font-size: 35px; margin-left: 10px;">Add Product</h1>
         <button class="menu-button">
@@ -82,7 +79,6 @@ $conn->close();
                 <i class="fas fa-sign-out-alt" style="font-size: 20px; color: darkgreen;"><span style="margin-left: 10px;">Logout</span></i>
             </a>
             <form id="logout-form" action="logout.php" method="POST" style="display: none;">
-                <!-- Form is hidden but used to perform POST request -->
             </form>
         </div>
     </header>
@@ -98,6 +94,8 @@ $conn->close();
             </div>
         </div>
     </div>
+
+    <!-- Search-Bar -->
     <div class="search-form">
         <form action="" method="GET">
             <input type="text" name="search" placeholder="Search...">
@@ -141,6 +139,7 @@ $conn->close();
                                                     <?php echo $product['price']; ?>
                                                         <span class="product-weight" style="margin-left: 20px;font-size: 10px; color: black;"> <?php echo $product['weight']; ?></span></div>
                                                 <div class="product-actions">
+
                                                     <!-- Edit Icon -->
                                                     <a href="adminupdate_product_form.php?Id=<?= htmlspecialchars($product['id']); ?>" class="update-btn">
                                                         <i class="far fa-edit" style="font-size: 18px; margin-left: 90px;">
@@ -165,6 +164,7 @@ $conn->close();
             </div>
         </div>
 
+            <!-- Icon-bar Navbar -->
         <div class="icon-bar">
             <a class="active" href="user_dashboard.php">
                 <i class="fas fa-store-alt"><br>

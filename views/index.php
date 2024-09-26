@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="css/loginpage.css">
 </head>
 <body>
+    <!-- mao ni saiyahang login maam human moadtu sya sa login_action para e identify niya ang username na imong e login if success mapadung sya user_dashboard  -->
+    
     <div class="form-box">
     <div class="center-icon">
         <img src="uploads/logopic.png" alt="423062764-1342544113808335-7405620093325838006-n-removebg-preview">

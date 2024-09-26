@@ -1,3 +1,4 @@
+<!-- Main Process -->
 <?php
 $servername = "localhost";
 $username = "root";

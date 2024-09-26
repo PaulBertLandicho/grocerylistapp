@@ -41,23 +41,24 @@ switch ($sort) {
       break;
 }
 
-// Updated SQL query with sorting and store search
-$sql = "SELECT * FROM product WHERE Name LIKE ? OR Brand LIKE ? OR Store LIKE ? ORDER BY $orderBy LIMIT ?, ?";
+// Updated SQL query with sorting, search, and user-specific filter
+$sql = "SELECT * FROM product WHERE (Name LIKE ? OR Brand LIKE ? OR Store LIKE ?) AND user_id = ? ORDER BY $orderBy LIMIT ?, ?";
 $stmt = $conn->prepare($sql);
 $searchTerm = "%$search%";
-$stmt->bind_param("ssssi", $searchTerm, $searchTerm, $searchTerm, $offset, $records_per_page);
+$stmt->bind_param("sssiii", $searchTerm, $searchTerm, $searchTerm, $user_id, $offset, $records_per_page);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Total records query updated to search name, brand, and store
-$total_records_query = "SELECT COUNT(*) FROM product WHERE Name LIKE ? OR Brand LIKE ? OR Store LIKE ?";
+// Total records query updated to search name, brand, store and user filter
+$total_records_query = "SELECT COUNT(*) FROM product WHERE (Name LIKE ? OR Brand LIKE ? OR Store LIKE ?) AND user_id = ?";
 $total_stmt = $conn->prepare($total_records_query);
-$total_stmt->bind_param("sss", $searchTerm, $searchTerm, $searchTerm);
+$total_stmt->bind_param("sssi", $searchTerm, $searchTerm, $searchTerm, $user_id);
 $total_stmt->execute();
 $total_records = $total_stmt->get_result()->fetch_row()[0];
 
-// Total pages
+// Total pages calculation remains the same
 $total_pages = ceil($total_records / $records_per_page);
+
 
 // Close statements
 $stmt->close();
@@ -82,6 +83,8 @@ $conn->close();
 </head>
 
 <body>
+
+    <!-- Header Navbar  -->
     <header class="navbar" data-bs-theme="dark">
         <h1>Grocery Shop</h1>
         <button class="menu-button">
@@ -102,11 +105,11 @@ $conn->close();
                 <i class="fas fa-sign-out-alt"><span style="margin-left: 10px;">Logout</span></i>
             </a>
             <form id="logout-form" action="logout.php" method="POST" style="display: none;">
-                <!-- Form is hidden but used to perform POST request -->
             </form>
         </div>
     </header>
 
+        <!-- Catogories -->
     <div class="categories-bar">
         <div class="categories">
             <div class="category">
@@ -159,6 +162,8 @@ $conn->close();
             </div>
         </div>
     </div>
+
+    <!-- Sorting Option -->
     <div class="sort-box">
         <form method="GET" action="" class="d-flex">
             <div class="form-group me-2">
@@ -172,6 +177,8 @@ $conn->close();
         </form>
     </div>
     <center>
+
+    <!-- Search-Bar -->
     <div class="search-box" style="width: 380px;">
     <form method="GET" action="" class="d-flex" id="search-form">
         <div class="search-icon-container">
@@ -184,6 +191,8 @@ $conn->close();
         </div>
         <h3 style="text-align: center; font-size: 20px; font-weight: bold; margin: 0 auto; display: block;"> Recommended <span style="font-size: 15px; font-weight: normal; margin-left: 200px;">All</span>
       </h3>
+
+              <!-- Poduct-list Container -->
         <div class="products-list-container" style="height: 490px;">
             <div id="product-list">
                 <?php
@@ -237,6 +246,7 @@ $conn->close();
         </div>
     </center>
 
+    <!-- Icon-bar Navbar -->
     <div class="icon-bar">
         <a class="active" href="user_dashboard.php">
             <i class="fas fa-store-alt" style="font-size: 24px; color: maroon;"><br>

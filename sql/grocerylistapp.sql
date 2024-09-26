@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 23, 2024 at 09:12 PM
+-- Generation Time: Sep 26, 2024 at 06:54 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -73,6 +73,13 @@ CREATE TABLE `my_addlist` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `my_addlist`
+--
+
+INSERT INTO `my_addlist` (`id`, `user_id`, `product_id`, `created_at`) VALUES
+(230, '7', '68', '2024-09-26 05:12:27');
+
 -- --------------------------------------------------------
 
 --
@@ -103,30 +110,18 @@ CREATE TABLE `product` (
   `weight` varchar(50) DEFAULT NULL,
   `available` tinyint(1) DEFAULT 1,
   `purchased` tinyint(1) DEFAULT 0,
-  `store` varchar(255) NOT NULL DEFAULT 'Unknown'
+  `store` varchar(255) NOT NULL DEFAULT 'Unknown',
+  `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`id`, `name`, `price`, `category_id`, `brand`, `image`, `weight`, `available`, `purchased`, `store`) VALUES
-(40, 'Mineral Water', 25.00, 4, 'Absolute', 'uploads/water.jpg\r\n', '350ml', 1, 0, 'FK Mart'),
-(42, 'Naked Whey', 130.00, 2, 'protein', 'uploads/protein.jpg', '250ml', 1, 0, 'Robenson'),
-(44, 'Coke', 95.00, 4, 'Coca-cola', 'uploads/coke_1.25L_1200x.webp', '1.25 L', 1, 0, 'FK Mart'),
-(45, 'Bulad', 75.00, 5, 'Unknown', 'uploads/bulad.jpg', '1kg', 1, 0, 'Bularan-saray'),
-(46, 'Tamban', 100.00, 5, 'Unknown', 'uploads/tambans.jpg', '1kg', 1, 0, 'Supermarket'),
-(47, 'Pure Protein', 250.00, 2, 'Protein', 'uploads/pure protein.webp', '574g', 1, 0, 'Robenson'),
-(48, 'Snack', 23.00, 3, 'leslie', 'uploads/snack.jpg', '70g', 1, 0, 'FK Mart'),
-(50, 'Shakoy', 10.00, 6, 'Unknown', 'uploads/shakoy.jpg', '1kg', 1, 0, 'Madelicious '),
-(51, 'Donut', 45.00, 6, 'Unknown', 'uploads/donut.jpg', '28g ', 1, 0, 'Dunkin Donuts'),
-(54, 'Eggplant', 20.00, 7, 'Unknown', 'uploads/eggplant.jpg', '1kg', 1, 0, 'Supermarket'),
-(56, 'Watemelon', 80.00, 1, 'unkown', 'uploads/watermelon.jpg', '1kg', 1, 0, 'Supermarket'),
-(59, 'Sting', 15.00, 4, 'PepsiCo', 'uploads/sting.jpg', '500ml', 1, 0, 'FK Mart'),
-(63, 'Carrot', 30.00, 6, 'Unknown', 'uploads/carrots.jpg', '1kg', 1, 0, 'Supermarket'),
-(64, 'Banana', 45.00, 1, 'Unknown', 'uploads/banana.jpg', '1kg', 1, 0, 'Supermarket'),
-(65, 'Apple', 30.00, 1, 'Unknown', 'uploads/apple.jpg', '1kg', 1, 0, 'Supermaket'),
-(66, 'Biscuit', 12.00, 3, 'Rebisco', 'uploads/biscuit.jpg', '32g', 1, 0, 'FK Mart');
+INSERT INTO `product` (`id`, `name`, `price`, `category_id`, `brand`, `image`, `weight`, `available`, `purchased`, `store`, `user_id`) VALUES
+(69, 'Carrot', 32.00, 7, 'Unknown ', 'uploads/carrots.jpg', '1kg', 1, 0, 'Supermarket', 2),
+(70, 'Apple', 30.00, 1, 'Unknown', 'uploads/apple.jpg', '1kg', 1, 0, 'FK Mart', 7),
+(71, 'Eggplant', 20.00, 7, 'Unknown', 'uploads/eggplant.jpg', '1kg', 1, 0, 'Supermarket', 2);
 
 -- --------------------------------------------------------
 
@@ -147,7 +142,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `email`, `password`, `profile_picture`) VALUES
-(2, 'PaulBert', 'landicho@gmail', '$2y$10$BGK657gPH.8PiVACUqyUWeGDJ1z6c1vFlG5YupVP15tsMa6pbK1v.', 'profile_2.jpg');
+(2, 'PaulBert', 'landicho@gmail', '$2y$10$BGK657gPH.8PiVACUqyUWeGDJ1z6c1vFlG5YupVP15tsMa6pbK1v.', 'profile_2.jpg'),
+(7, 'Romarc', 'romarc@gmail.com', '$2y$10$YUrzF0AW3ak09rtBganQQeMgaqjWccV6YZ/bOsRNgQhiwG0HVWSCK', 'defaultprofile.jpg');
 
 --
 -- Indexes for dumped tables
@@ -200,31 +196,31 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=234;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=325;
 
 --
 -- AUTO_INCREMENT for table `my_addlist`
 --
 ALTER TABLE `my_addlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=215;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=231;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

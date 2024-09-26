@@ -37,6 +37,8 @@
 </head>
 
 <body>
+
+    <!-- Header Navbar -->
     <header class="navbar nowrap p-0 shadow" style="height: 150px; border: none; background-color: darkgreen;" data-bs-theme="dark">
         <center>
             <p style="color: white; font-size: 50px; font-weight: bold; margin-top: 5px; margin-left:110px; text-align: center;">PROFILE</p>
@@ -77,12 +79,12 @@
             <span style="color: white; margin-left: 15px; font-weight: bold; text-shadow: 0 2px 10px rgba(0,0,0,2.1);">Logout</span>
         </a>
         <form id="logout-form" action="logout.php" method="POST" style="display: none;">
-            <!-- Form is hidden but used to perform POST request -->
         </form>
     </div>
     </div>
     </div>
 
+    <!-- Icon-bar Navbar -->
     <div class="icon-bar">
         <a class="active" href="user_dashboard.php">
             <i class="fas fa-store-alt"><br>

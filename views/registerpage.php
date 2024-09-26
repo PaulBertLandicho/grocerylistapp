@@ -10,6 +10,7 @@
 
   </head>
   <body>
+    <!-- mao ni saiyahang register maam inig human nimo fill in  maam moadtu sya sa register_action para iyahang e process padulong sa database para e Post sa register ang ID user then directly na sya mo proceed sa user_dashboard -->
     
     <div class="form-box">
         <div class="center-icon">

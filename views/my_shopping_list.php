@@ -55,6 +55,8 @@ if ($user_result->num_rows > 0) {
 </head>
 
 <body>
+
+    <!-- Header Navbar  -->
 <header class="navbar" style="width: auto;" data-bs-theme="dark" id="navbar">
     <h2 id="greeting" style="font-weight: bold; margin-left: 10px;">Hello! <?php echo htmlspecialchars($user['username']); ?> </h2>
 
@@ -94,6 +96,8 @@ if ($user_result->num_rows > 0) {
             </div>
         </div>
     </div>
+
+    <!-- Search-Bar -->
     <div class="search-form">
         <form action="" method="GET">
             <input type="text" name="search" placeholder="Search...">
@@ -103,6 +107,8 @@ if ($user_result->num_rows > 0) {
         </form>
     </div>
     <h1 style="font-weight: bold; font-size: 30px; text-align: center; color: darkgreen; margin-left: 10px;">My Shopping List</h1>
+   
+    <!-- Sorting Option -->
     <div class="sort-options">
         <form action="" method="GET" class="d-flex">
         <div class="form-group me-2">
@@ -114,6 +120,8 @@ if ($user_result->num_rows > 0) {
             </div>
         </form>
     </div>
+
+     <!-- Poduct-list Container -->
    <div class="product-list">
         <div class="list-wrapper">
             <?php $foundProduct = false;?>

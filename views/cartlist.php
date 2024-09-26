@@ -70,6 +70,8 @@ $total_price = 0;
 </head>
 
 <body>
+
+    <!-- Header Navbar  -->
     <header class="navbar" style="width: auto; margin-bottom: 20px;" data-bs-theme="dark">
         <h1 style="font-weight: bold; font-size: 35px; margin-left: 10px;">My Cart</h1>
         <button class="menu-button">
@@ -90,14 +92,15 @@ $total_price = 0;
                 <i class="fas fa-sign-out-alt" style="font-size: 20px; color: darkgreen;"><span style="margin-left: 10px;">Logout</span></i>
             </a>
             <form id="logout-form" action="logout.php" method="POST" style="display: none;">
-                <!-- Form is hidden but used to perform POST request -->
             </form>
         </div>
     </header>
 
+    <!-- Scrollable Container -->
     <div class="scrollable-container" style="height: 670px;">
     <div class="products-list-container">
         <?php
+        
         // Check if products are found in the cart
         if ($result->num_rows > 0) {
             // Initialize total price
@@ -161,7 +164,7 @@ $total_price = 0;
 </div>
 
 
-
+    <!-- Icon-bar Navbar -->
     <div class="icon-bar" style="margin-top: 68px;">
         <a class="active" href="user_dashboard.php">
             <i class="fas fa-store-alt"><br>
