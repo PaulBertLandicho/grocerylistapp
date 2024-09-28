@@ -186,7 +186,7 @@ if ($user_result->num_rows > 0) {
                             <!-- no-product-found -->
                             <div class="no-product-found">
                                 <image src="uploads/emptybag.png" style="margin-top: 40px;">
-                                    <h3 style="color: maroon; opacity: 0.7; font-weight: bold; margin-top:50px;">Your List is Empty.</h3>
+                                    <h3 style="text-align: center; opacity: 0.7; font-weight: bold; margin-top:50px;">Your List is Empty.</h3>
                             </div>
                             <?php endif; ?>
         </div>

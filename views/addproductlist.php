@@ -157,7 +157,7 @@ $conn->close();
                             <?php if (!$foundProduct): ?>
                                 <div class="no-product-found">
                                     <image src="uploads/emptybag.png" style="margin-top: 40px;">
-                                        <h3 style="color: maroon; opacity: 0.7; font-weight: bold; margin-top: 1em;">Your List is Empty.</h3>
+                                        <h3 style="text-align: center; opacity: 0.7; font-weight: bold; margin-top: 1em;">Your List is Empty.</h3>
                                 </div>
                                 <?php endif; ?>
 

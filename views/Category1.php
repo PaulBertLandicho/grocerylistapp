@@ -214,7 +214,7 @@ $conn->close();
                         <?php if (!$foundProduct): ?>
                             <div class="no-product-found">
                                 <image src="uploads/notfound.png" style="margin-top: 40px;">
-                                    <h3 style="color: maroon; opacity: 0.7; margin-top: 2em;">Product not found</h3>
+                                <h3 style="text-align: center; opacity: 0.7; margin-top: 2em;">Product not found.</h3>
                             </div>
                             <?php endif; ?>
             </div>

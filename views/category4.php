@@ -207,7 +207,7 @@ $conn->close();
                         <?php if (!$foundProduct): ?>
                             <div class="no-product-found">
                                 <image src="uploads/notfound.png" style="margin-top: 40px;">
-                                    <h3 style="color: maroon; opacity: 0.7; margin-top: 2em;">Product not found</h3>
+                                    <h3 style="text-align: center; opacity: 0.7; margin-top: 2em;">Product not found.</h3>
                             </div>
                             <?php endif; ?>
             </div>
@@ -254,9 +254,6 @@ $conn->close();
                 </p>
                 <p style="font-weight: bold; color: darkgreen;">Weight/Volume:
                     <span id="modal-product-weight" style="color: black;"></span>
-                </p>
-                <p style="font-weight: bold; color: darkgreen;">Volume:
-                    <span id="modal-product-volume" style="color: black;"></span>
                 </p>
                 <p style="font-weight: bold; color: darkgreen;">Store:
                     <span id="modal-product-store" style="color: black;"></span>

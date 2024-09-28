@@ -104,7 +104,8 @@
 </a></i>
                         <a class="active">
                             <button class="menu-button">
-                                <i class="fa fa-align-justify" style="color: maroon; font-size: 40px; margin-right: 15px; transition: transform 0.3s ease;"></i>
+                                <i class="fas fa-user-circle" style="color: maroon; font-size: 24px; transition: transform 0.3s ease;"><br>
+                                <span style="font-size: 16px;">Profile</span></i>
                             </button>
 
                             <!-- Menu content with icons -->

@@ -156,7 +156,7 @@ $total_price = 0;
             // If the cart is empty, display a message to the user
             echo '<div class="no-product-found">
                 <img src="uploads/emptybag.png" style="margin-top: 40px; margin-left: 100px;">
-                <h3 style="color: maroon; opacity: 0.7; margin-top: 5em; text-align: center;">List is Empty.</h3>
+                <h3 style="opacity: 0.7; margin-top: 5em; text-align: center;">List is Empty.</h3>
             </div>';
         }
         ?>
