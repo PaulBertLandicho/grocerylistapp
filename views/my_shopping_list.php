@@ -116,6 +116,7 @@ if ($user_result->num_rows > 0) {
                 <option value="name" <?php if ($sort_by == 'name') echo 'selected'; ?>>Sort by Name</option>
                 <option value="category" <?php if ($sort_by == 'category') echo 'selected'; ?>>Sort by Category</option>
                 <option value="price" <?php if ($sort_by == 'price') echo 'selected'; ?>>Sort by Price</option>
+                <option value="store" <?php if ($sort_by == 'store') echo 'selected'; ?>>Sort by Store</option>
             </select>
             </div>
         </form>
